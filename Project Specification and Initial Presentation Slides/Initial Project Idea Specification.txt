@@ -1,0 +1,13 @@
+Project Title: EvoGame: Evolving Game Strategies Using GE
+Project Category: Predominately Research
+Project Description: This project focuses on creating a system where game strategies for a
+simple turn-based game (e.g., Connect Four, draughts, or a custom-designed game) are
+evolved using GE. The project will involve defining a grammar that specifies possible moves
+and tactics and then using grammatical evolution to iteratively improve these strategies. By
+simulating thousands of games, the evolved strategies can be tested and refined to find the
+optimal approach.
+Objectives:
+1. Develop a system that evolves strategies for a turn-based game using grammatical
+evolution.
+2. Implement and optimize a grammar that defines possible game strategies.
+3. Analyse and visualize the evolution of strategies over multiple generations
