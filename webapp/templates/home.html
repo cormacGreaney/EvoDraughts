@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}EvoDraughts - Home{% endblock %}
+
+{% block content %}
+<header class="home-header">
+    <h1>EvoDraughts</h1>
+    <p class="subtitle">Play Against Strategies Evolved Through Grammatical Evolution</p>
+    <p class="subtitle2">Cormac Greaney @ University of Limerick - 2025</p>
+</header>
+
+<div class="home-content">
+    <section class="intro-section">
+        <h2>Welcome to EvoDraughts</h2>
+        <p class="intro-text">
+            This is my Final Year Project where I'm using <strong>Grammatical Evolution (GE)</strong> with the GRAPE framework 
+            to evolve draughts playing strategies. I've trained AI opponents through genetic algorithms, and you can 
+            test them out here. The strategies improve over generations by playing games and learning what works.
+        </p>
+    </section>
+
+    <section class="features-section">
+        <h2>What You Can Do</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Multiple Difficulty Levels</h3>
+                <p>I've organized the evolved strategies into Easy, Medium, and Hard categories based on how well they perform. Each represents different stages of the evolution process.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Board Size Options</h3>
+                <p>You can choose between a simplified 6x6 board for quicker games, or the full 8x8 standard draughts board for the traditional experience.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Evolved Strategies</h3>
+                <p>All the AI opponents you'll face are strategies that evolved through my grammatical evolution system, not pre-programmed rules.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Interactive Gameplay</h3>
+                <p>Play real games with visual feedback. The AI will make its moves automatically after yours, and you can see exactly what's happening.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="get-started-section">
+        <h2>Ready to Play?</h2>
+        <p>Pick your board size and difficulty, then give it a go. Right now games are <strong>not </strong> being recorded!</p>
+        <a href="{{ url_for('play') }}" class="btn btn-primary btn-large">Start Playing</a>
+    </section>
+
+    <section class="project-info-section">
+        <h2>About This Project</h2>
+        <p>
+            For my Final Year Project, I wanted to explore how <strong>Grammatical Evolution</strong> could be applied to game AI. 
+            The strategies are written as expressions using a Backus-Naur Form (BNF) grammar, and then evolved over generations 
+            using genetic algorithms. Each generation plays games, and the better strategies are selected to create the next generation.
+        </p>
+        <p>
+            <a href="{{ url_for('about') }}" class="link">Read more about how it works →</a>
+        </p>
+    </section>
+</div>
+{% endblock %}
+

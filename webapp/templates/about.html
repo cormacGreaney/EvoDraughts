@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}About EvoDraughts{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <h1>About EvoDraughts</h1>
+</header>
+
+<div class="about-content">
+    <section class="about-section">
+        <h2>What is EvoDraughts?</h2>
+        <p>
+            EvoDraughts is my Final Year Project where I'm using <strong>Grammatical Evolution (GE)</strong> to evolve 
+            draughts strategies. I built this using the GRAPE framework (Grammatical Algorithms in Python for Evolution) which lets me 
+            evolve AI strategies through genetic algorithms instead of manually programming them.
+        </p>
+    </section>
+
+    <section class="about-section">
+        <h2>How It Works</h2>
+        <div class="process-list">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Grammar Definition</h3>
+                    <p>I wrote a Backus-Naur Form (BNF) grammar that defines how strategies can be built. This includes 
+                    things like conditional statements, math operations, and ways to check board features. Each strategy 
+                    is basically a program written in this grammar.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Evolution Process</h3>
+                    <p>I start with a population of random strategies and let them evolve over generations. Each strategy 
+                    plays games against random opponents, and I measure their fitness based on how many games they win. 
+                    The ones that perform better are more likely to survive and reproduce.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Strategy Selection</h3>
+                    <p>I use genetic algorithm operations - selection, crossover (combining two strategies), and mutation 
+                    (randomly changing parts). Over many generations, the strategies get better at playing draughts. I've 
+                    seen strategies go from random moves to actually making decent decisions.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Human Testing</h3>
+                    <p>This web app lets people play against the evolved strategies. It's really useful for me to see how 
+                    they perform against human players, not just random opponents. Plus it makes the project more interactive 
+                    and fun for testing.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2>Technical Details</h2>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h3>Grammatical Evolution</h3>
+                <p>This is a type of genetic programming where I represent strategies as binary strings that get mapped 
+                to valid expressions through my grammar. It's cool because it guarantees the strategies are always syntactically 
+                correct.</p>
+            </div>
+            <div class="tech-item">
+                <h3>GRAPE Framework</h3>
+                <p>I'm using the GRAPE Python framework which handles a lot of the grammatical evolution mechanics for me. 
+                It takes care of turning binary genomes into phenotypes (the actual strategy expressions) and manages the 
+                evolution process.</p>
+            </div>
+            <div class="tech-item">
+                <h3>Board Representation</h3>
+                <p>When a strategy needs to evaluate a position, it gets access to board features like piece positions, 
+                how many pieces each player has, king counts, mobility (available moves), and center control. The strategy 
+                uses these to decide what move to make.</p>
+            </div>
+            <div class="tech-item">
+                <h3>Fitness Evaluation</h3>
+                <p>I evaluate each strategy by having it play multiple games against random opponents. The fitness score 
+                is based on how many games it wins. Lower fitness means better performance (I'm minimizing losses). I also 
+                add a small penalty for overly simple strategies to encourage complexity.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2>Difficulty Levels</h2>
+        <p>I've organized the strategies into three difficulty levels based on their fitness scores from evolution:</p>
+        <ul class="difficulty-list">
+            <li><strong>Easy:</strong> These are strategies with higher fitness values (around 0.55-1.0), meaning they're weaker 
+                and win about 20% of the time. Good if you're just learning or want a casual game.</li>
+            <li><strong>Medium:</strong> Strategies with fitness between 0.40-0.55. These win around 30% of games and offer a 
+                balanced challenge.</li>
+            <li><strong>Hard:</strong> The better evolved strategies with fitness below 0.40. These can win 40% or more of games 
+                and should give experienced players a decent challenge.</li>
+        </ul>
+    </section>
+
+    <section class="about-section">
+        <h2>Project Information</h2>
+        <p>
+            This is my Final Year Project at the University of Limerick. I chose to explore evolutionary computation applied 
+            to game AI because I find it fascinating that you can evolve strategies instead of hand-coding them. It's been 
+            really interesting to watch the strategies improve over generations and see what kinds of patterns they develop.
+        </p>
+        <p>
+            Cormac Greaney, University of Limerick, 2025
+        </p>
+    </section>
+
+    <div class="back-to-game">
+        <a href="{{ url_for('play') }}" class="btn btn-primary">Try It Out</a>
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
+

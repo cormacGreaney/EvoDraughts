@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Play EvoDraughts{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <h1>Play EvoDraughts</h1>
+    <p class="subtitle">Challenge the Evolved AI Strategies</p>
+</header>
+
+<!-- Game Settings Panel -->
+<div id="settings-panel" class="panel">
+    <h2>Game Settings</h2>
+    <div class="settings-form">
+        <div class="setting-group">
+            <label for="complexity">Board Size:</label>
+            <select id="complexity">
+                <option value="6x6">Simple (6x6)</option>
+                <option value="8x8">Full Game (8x8)</option>
+            </select>
+        </div>
+        <div class="setting-group">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <button id="start-btn" class="btn btn-primary">Start Game</button>
+    </div>
+</div>
+
+<!-- Game Board Panel -->
+<div id="game-panel" class="panel hidden">
+    <div class="game-header">
+        <h2>Game in Progress</h2>
+        <button id="new-game-btn" class="btn btn-secondary">New Game</button>
+    </div>
+    
+    <div class="game-info">
+        <div class="info-item">
+            <span class="label">Current Player:</span>
+            <span id="current-player">You (Red)</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Moves:</span>
+            <span id="move-count">0</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Difficulty:</span>
+            <span id="current-difficulty">-</span>
+        </div>
+    </div>
+
+    <div class="board-container">
+        <canvas id="game-board"></canvas>
+    </div>
+
+    <div id="game-status" class="game-status hidden"></div>
+</div>
+
+<!-- Loading Indicator -->
+<div id="loading" class="loading hidden">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
+
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}
+
