@@ -1,0 +1,56 @@
+============================================================
+EvoDraughts Evolution Results (Improved Version)
+============================================================
+Date: 2025-12-14 22:04:41
+Board Size: 6x6
+Population Size: 150
+Generations: 30
+Games per Evaluation: 15
+Co-evolution: True
+Co-evolution Opponents: 5
+============================================================
+
+Best Individual:
+------------------------------------------------------------
+x[32]
+
+Fitness: 0.2000
+Depth: 4
+Genome Length: 49
+Used Codons: 2/49 (4.08%)
+
+Test Results (vs Random): 6/20 wins (30.0%)
+
+Generation Statistics:
+------------------------------------------------------------
+Generation 0: Best=0.4667, Avg=0.5580
+Generation 1: Best=0.3667, Avg=0.5532
+Generation 2: Best=0.2000, Avg=0.5164
+Generation 3: Best=0.2000, Avg=0.5345
+Generation 4: Best=0.2000, Avg=0.5056
+Generation 5: Best=0.2000, Avg=0.4809
+Generation 6: Best=0.2000, Avg=0.5380
+Generation 7: Best=0.2000, Avg=0.5671
+Generation 8: Best=0.2000, Avg=0.5049
+Generation 9: Best=0.2000, Avg=0.5288
+Generation 10: Best=0.2000, Avg=0.5340
+Generation 11: Best=0.2000, Avg=0.4935
+Generation 12: Best=0.2000, Avg=0.5266
+Generation 13: Best=0.2000, Avg=0.4964
+Generation 14: Best=0.2000, Avg=0.5539
+Generation 15: Best=0.2000, Avg=0.5246
+Generation 16: Best=0.2000, Avg=0.5191
+Generation 17: Best=0.2000, Avg=0.5059
+Generation 18: Best=0.2000, Avg=0.5167
+Generation 19: Best=0.2000, Avg=0.5051
+Generation 20: Best=0.2000, Avg=0.5265
+Generation 21: Best=0.2000, Avg=0.5179
+Generation 22: Best=0.2000, Avg=0.5204
+Generation 23: Best=0.2000, Avg=0.5138
+Generation 24: Best=0.2000, Avg=0.5428
+Generation 25: Best=0.2000, Avg=0.5491
+Generation 26: Best=0.2000, Avg=0.5349
+Generation 27: Best=0.2000, Avg=0.5146
+Generation 28: Best=0.2000, Avg=0.5161
+Generation 29: Best=0.2000, Avg=0.5255
+Generation 30: Best=0.2000, Avg=0.4840

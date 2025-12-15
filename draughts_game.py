@@ -212,7 +212,7 @@ class DraughtsBoard:
     
     def copy(self):
         """Create a deep copy of the board."""
-        new_board = DraughtsBoard()
+        new_board = DraughtsBoard(board_size=self.BOARD_SIZE)
         new_board.board = self.board.copy()
         new_board.current_player = self.current_player
         new_board.game_over = self.game_over
