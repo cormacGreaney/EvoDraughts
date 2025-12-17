@@ -57,6 +57,7 @@ class StrategyManager:
     def get_strategies_by_difficulty(self, complexity: str, difficulty: str) -> List[Dict]:
         """
         Get all strategies matching the specified complexity and difficulty.
+        Uses manual file assignment from config.
         
         Args:
             complexity: '6x6' or '8x8'
@@ -65,26 +66,29 @@ class StrategyManager:
         Returns:
             List of strategy dictionaries
         """
-        if difficulty not in STRATEGY_MAPPING.get(complexity, {}):
+        if complexity not in STRATEGY_MAPPING:
             return []
         
-        fitness_range = STRATEGY_MAPPING[complexity][difficulty]['fitness_range']
-        min_fitness, max_fitness = fitness_range
+        if difficulty not in STRATEGY_MAPPING[complexity]:
+            return []
         
-        matching_strategies = []
+        # Get list of assigned filenames for this difficulty
+        assigned_files = STRATEGY_MAPPING[complexity][difficulty]
+        if not assigned_files:
+            return []
+        
+        # Build a lookup dict for fast access
+        strategy_lookup = {}
         for key, strategy_info in self._strategies_cache.items():
-            if strategy_info['complexity'] != complexity:
-                continue
-            
-            fitness = strategy_info.get('fitness')
-            if fitness is None:
-                continue
-            
-            if min_fitness <= fitness <= max_fitness:
-                matching_strategies.append(strategy_info)
+            if strategy_info['complexity'] == complexity:
+                strategy_filename = os.path.basename(strategy_info['file'])
+                strategy_lookup[strategy_filename] = strategy_info
         
-        # Sort by fitness (lower is better, so best strategies first)
-        matching_strategies.sort(key=lambda x: x.get('fitness', 1.0))
+        # Return strategies in the order specified in config
+        matching_strategies = []
+        for filename in assigned_files:
+            if filename in strategy_lookup:
+                matching_strategies.append(strategy_lookup[filename])
         
         return matching_strategies
     
@@ -121,8 +125,8 @@ class StrategyManager:
     
     def get_best_strategy(self, complexity: str, difficulty: str) -> Optional[Dict]:
         """
-        Get the best strategy for a given complexity and difficulty.
-        Returns the strategy with the lowest fitness (best performance).
+        Get the first strategy for a given complexity and difficulty.
+        Returns the first strategy in the assigned list.
         
         Args:
             complexity: '6x6' or '8x8'
@@ -133,7 +137,7 @@ class StrategyManager:
         """
         strategies = self.get_strategies_by_difficulty(complexity, difficulty)
         if strategies:
-            # Already sorted by fitness, return the first (best) one
+            # Return the first one in the list
             return strategies[0]
         return None
     

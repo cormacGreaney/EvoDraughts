@@ -11,38 +11,27 @@ PROJECT_ROOT = Path(__file__).parent.parent
 RESULTS_DIR = PROJECT_ROOT / "results"
 
 # Strategy difficulty mapping
-# Strategies are mapped based on their fitness (lower fitness = better strategy)
-# You can manually assign specific strategy files to difficulty levels here
+# Manually assign specific result files to each difficulty level
 STRATEGY_MAPPING = {
     '6x6': {
-        'easy': {
-            # Weaker strategies (higher fitness, lower win rate)
-            'fitness_range': (0.55, 1.0),
-            'description': 'Easy strategies'
-        },
-        'medium': {
-            'fitness_range': (0.40, 0.55),
-            'description': 'Medium strategies'
-        },
-        'hard': {
-            # Stronger strategies (lower fitness, higher win rate)
-            'fitness_range': (0.0, 0.40),
-            'description': 'Hard strategies'
-        }
+        'easy': [
+            'evolution_20251214_220441.txt',
+        ],
+        'medium': [
+            'evolution_20251215_032724.txt',
+        ],
+        'hard': [
+            'evolution_20251216_034713.txt',
+        ]
     },
     '8x8': {
-        'easy': {
-            'fitness_range': (0.55, 1.0),
-            'description': 'Easy strategies'
-        },
-        'medium': {
-            'fitness_range': (0.40, 0.55),
-            'description': 'Medium strategies'
-        },
-        'hard': {
-            'fitness_range': (0.0, 0.40),
-            'description': 'Hard strategies'
-        }
+        'easy': [
+            'evolution_8x8_20251216_222007.txt',
+        ],
+        'medium': [
+        ],
+        'hard': [
+        ]
     }
 }
 
