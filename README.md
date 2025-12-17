@@ -1,61 +1,47 @@
-# EvoDraughts: Evolving Draughts Strategies Using GRAPE
+# EvoDraughts
 
-This project uses Grammatical Evolution (GE) via the GRAPE framework to evolve draughts playing strategies. Strategies are represented as expressions in a BNF grammar that evaluate board positions and select moves.
+Note: the contents of docs/ folder are not up to date right now
 
-## Current Status
+Using Grammatical Evolution (via GRAPE) to evolve draughts playing strategies. The strategies are basically math expressions that evaluate board positions and pick moves - and they get better over time through evolution.
 
-System is fully implemented and tested. I've completed three evolution runs showing clear improvement:
-- **Run 1**: 20% win rate, simple strategies
-- **Run 2**: 30% win rate, still simple
-- **Run 3**: 40% win rate, complex conditional strategies
+## What I've Got
 
-**Latest Results:**
-- Best Strategy: `if_(greater_than_or_equal(x[0], x[25]), x[19], x[20])`
-- Fitness: 0.325 (improved from 0.45)
-- Win Rate: 40% vs random
-- Evolution: Clear improvement over 100 generations
+- **6x6 version**: Works pretty well, got strategies winning 75%+ against random
+- **8x8 version**: Still working on this one - had some overfitting issues but making progress
+- **Web app**: Simple Flask interface to play against the evolved strategies (in `webapp/`)
+- **Multiple runs**: Been tweaking parameters and running evolutions, results are in `results/`
 
 ## Quick Start
 
 ```bash
 pip install -r requirements.txt
-python evolve_draughts.py
+python evolve_draughts.py          # 6x6 board
+python evolve_draughts_8x8.py       # 8x8 board
 ```
 
-Results are saved to `results/` folder automatically.
+Or play against evolved strategies:
+```bash
+python play_against_evolved.py --list
+```
+
+Or use the web interface:
+```bash
+cd webapp
+pip install -r requirements.txt
+python run.py
+```
 
 ## How It Works
 
-1. **Grammar**: BNF grammar defines possible strategies as expressions
-2. **Board Features**: 47 features for 6x6 board (positions + game state)
-3. **Evaluation**: Strategies play games against random opponent
-4. **Evolution**: GRAPE evolves better strategies over generations
-5. **Results**: Automatically saved with best strategy and statistics
+The system uses GRAPE (Grammatical Evolution framework) to evolve strategies. Each strategy is a grammar expression that takes board features and outputs a move. They play games, get evaluated, and the best ones survive to the next generation.
 
-## Project Structure
+## Files
 
-- `evolve_draughts.py` - Main evolution script
-- `draughts_game.py` - Game implementation
-- `grammars/draughts.bnf` - Strategy grammar
-- `config.py` - Settings
-- `results/` - All run results
+- `evolve_draughts.py` - Original 6x6 evolution script
+- `evolve_draughts_8x8.py` - 8x8 version with co-evolution
+- `draughts_game.py` - Game logic
+- `config.py` - All the settings and parameters
+- `grammars/` - BNF grammars defining the strategy space
+- `results/` - some of my evolution runs and analysis
+- `webapp/` - Web interface for playing
 
-## Documentation
-
-All documentation is in the `docs/` folder:
-- `docs/HOW_TO_RUN.md` - Running the evolution
-- `docs/SETTINGS.md` - Settings and what I learned
-- `docs/SETUP_COMPLETE.md` - Project status
-- `docs/ITERATIONS.md` - Multiple iteration support
-
-## Key Features
-
-- Complete draughts game implementation
-- GRAPE integration for grammatical evolution
-- Grammar-defined strategy space
-- Fitness evaluation through game simulation
-- Automatic result saving
-- Strategies using grammar constructs correctly
-- Clear evidence of evolution over generations
-
-The system works and produces evolving strategies using GE with the defined grammar.
