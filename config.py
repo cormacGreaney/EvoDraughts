@@ -23,12 +23,12 @@ ITERATION_2 = {
     'grammar_file': 'grammars/draughts2.bnf'
 }
 
-# Iteration 3: Standard 8x8 board (for future use)
+# Iteration 3: Standard 8x8 board with move evaluation
 ITERATION_3 = {
     'board_size': 8,
-    'description': 'Standard 8x8 draughts',
+    'description': 'Standard 8x8 draughts with position evaluation',
     'max_moves': 200,
-    'grammar_file': 'grammars/draughts.bnf'  # Will need to update grammar for 8x8
+    'grammar_file': 'grammars/draughts_8x8.bnf'
 }
 
 # Current iteration configuration
@@ -71,6 +71,43 @@ P_MUTATION_V2 = 0.10  # Increased from 0.05 to 0.10 for better exploration
 # Improved version hall of fame (for evolve_draughts2.py)
 HALLOFFAME_SIZE_V2 = 10
 
+# ============================================================================
+# 8x8 VERSION SETTINGS - RUN 1 (First 8x8 run - 2025-12-16)
+# ============================================================================
+# - 8x8 games are slower due to more positions and longer games
+# - Using similar parameters to V2 which worked well for 6x6
+# - Estimated time: 60-100 hours total (longer due to game complexity)
+# - RESULTS: Severe overfitting (85% training, 10% test), premature convergence
+POPULATION_SIZE_8x8_RUN1 = 300
+MAX_GENERATIONS_8x8_RUN1 = 50
+N_GAMES_PER_EVAL_8x8_RUN1 = 20
+P_MUTATION_8x8_RUN1 = 0.10
+HALLOFFAME_SIZE_8x8_RUN1 = 10
+
+# ============================================================================
+# 8x8 VERSION SETTINGS - RUN 2 (Second 8x8 run - 2025-12-16)
+# ============================================================================
+# - Increased population (300->400) for more diversity
+# - Increased generations (50->75) to prevent premature convergence
+# - Increased mutation (0.10->0.15) to maintain diversity
+# - Estimated time: 120-200 hours (2-2.5x longer than Run 1)
+# - Changes: More random opponents (60%->40% co-evolved), stronger complexity penalty
+POPULATION_SIZE_8x8 = 400  # Increased from 300 for Run 1
+MAX_GENERATIONS_8x8 = 75   # Increased from 50 for Run 1
+N_GAMES_PER_EVAL_8x8 = 20  # Same as Run 1
+
+# 8x8 version mutation rate (for evolve_draughts_8x8.py)
+# Increased from 0.10 to prevent premature convergence
+P_MUTATION_8x8 = 0.15  # Increased from 0.10 for Run 1
+
+# 8x8 version hall of fame (for evolve_draughts_8x8.py)
+HALLOFFAME_SIZE_8x8 = 10  # Same as Run 1
+
+# 8x8 version initialization (for evolve_draughts_8x8.py)
+MAX_INIT_TREE_DEPTH_8x8 = 13
+MIN_INIT_TREE_DEPTH_8x8 = 3
+MAX_TREE_DEPTH_8x8 = 30
+
 # Initialization
 MAX_INIT_TREE_DEPTH = 8
 MIN_INIT_TREE_DEPTH = 3
@@ -95,4 +132,16 @@ RANDOM_SEED = 123
 USE_COEVOLUTION = True
 COEVOLUTION_OPPONENTS = 5
 USE_SELF_PLAY = False
+
+# 8x8 co-evolution opponent ratio (for evolve_draughts_8x8.py)
+# Run 1: 60% co-evolved, 40% random (caused overfitting)
+# Run 2: 40% co-evolved, 60% random (to improve generalization)
+COEVOLUTION_RATIO_8x8_RUN1 = 0.6  # 60% co-evolved opponents
+COEVOLUTION_RATIO_8x8 = 0.4       # 40% co-evolved, 60% random (Run 2)
+
+# 8x8 complexity penalty (for evolve_draughts_8x8.py)
+# Run 1: 0.15 (not strong enough - simple strategies still won)
+# Run 2: 0.20 (increased to encourage more complex strategies)
+COMPLEXITY_PENALTY_8x8_RUN1 = 0.15
+COMPLEXITY_PENALTY_8x8 = 0.20  # Increased from 0.15 for Run 2
 
