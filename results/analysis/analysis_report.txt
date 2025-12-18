@@ -1,0 +1,100 @@
+================================================================================
+EVODRAUGHTS - EVOLUTION RESULTS ANALYSIS REPORT
+================================================================================
+
+Total Runs Analyzed: 10
+
+BEST PERFORMERS
+--------------------------------------------------------------------------------
+
+Best 6x6 Strategy:
+  File: evolution_20251216_034713.txt
+  Strategy: add(x[20], mul(x[45], x[40]))
+  Training Fitness: 0.1800 (82.0% win rate)
+  Test Performance: 15/20 (75.0%)
+  Complexity: 2 operations, 3 unique features
+  Features Used: [20, 45, 40]
+
+Best 8x8 Strategy:
+  File: evolution_8x8_20251218_002100.txt
+  Strategy: add(x[35], x[26])
+  Training Fitness: 0.1750 (82.5% win rate)
+  Test Performance: 16/20 (80.0%)
+  Complexity: 1 operations, 2 unique features
+  Features Used: [35, 26]
+
+
+================================================================================
+STRATEGY COMPARISON
+================================================================================
+
+6x6 - evolution_20251213_034131.txt
+  Strategy: x[32]
+  Operations: 0
+  Unique Features: 1
+  Token Breakdown: {'if_': 0, 'add': 0, 'sub': 0, 'mul': 0, 'pdiv': 0, 'max_': 0, 'min_': 0, 'greater_than_or_equal': 0, 'less_than_or_equal': 0}
+  Test: 2/10 (20.0%)
+
+6x6 - evolution_20251213_055102.txt
+  Strategy: x[8]
+  Operations: 0
+  Unique Features: 1
+  Token Breakdown: {'if_': 0, 'add': 0, 'sub': 0, 'mul': 0, 'pdiv': 0, 'max_': 0, 'min_': 0, 'greater_than_or_equal': 0, 'less_than_or_equal': 0}
+  Test: 3/10 (30.0%)
+
+6x6 - evolution_20251213_083718.txt
+  Strategy: if_(greater_than_or_equal(x[0], x[25]), x[19], x[20])
+  Operations: 2
+  Unique Features: 4
+  Token Breakdown: {'if_': 1, 'add': 0, 'sub': 0, 'mul': 0, 'pdiv': 0, 'max_': 0, 'min_': 0, 'greater_than_or_equal': 1, 'less_than_or_equal': 0}
+  Test: 3/10 (30.0%)
+
+6x6 - evolution_20251214_220441.txt
+  Strategy: x[32]
+  Operations: 0
+  Unique Features: 1
+  Token Breakdown: {'if_': 0, 'add': 0, 'sub': 0, 'mul': 0, 'pdiv': 0, 'max_': 0, 'min_': 0, 'greater_than_or_equal': 0, 'less_than_or_equal': 0}
+  Test: 6/20 (30.0%)
+
+6x6 - evolution_20251215_032724.txt
+  Strategy: min_(x[45], 2.0)
+  Operations: 1
+  Unique Features: 1
+  Token Breakdown: {'if_': 0, 'add': 0, 'sub': 0, 'mul': 0, 'pdiv': 0, 'max_': 0, 'min_': 1, 'greater_than_or_equal': 0, 'less_than_or_equal': 0}
+  Test: 13/20 (65.0%)
+
+6x6 - evolution_20251215_090842.txt
+  Strategy: max_(if_(less_than_or_equal(x[6], 0.1), 2.0, x[20]), neg(5.0))
+  Operations: 3
+  Unique Features: 2
+  Token Breakdown: {'if_': 1, 'add': 0, 'sub': 0, 'mul': 0, 'pdiv': 0, 'max_': 1, 'min_': 0, 'greater_than_or_equal': 0, 'less_than_or_equal': 1}
+  Test: 0/20 (0.0%)
+
+6x6 - evolution_20251215_202804.txt
+  Strategy: x[20]
+  Operations: 0
+  Unique Features: 1
+  Token Breakdown: {'if_': 0, 'add': 0, 'sub': 0, 'mul': 0, 'pdiv': 0, 'max_': 0, 'min_': 0, 'greater_than_or_equal': 0, 'less_than_or_equal': 0}
+  Test: 5/20 (25.0%)
+
+6x6 - evolution_20251216_034713.txt
+  Strategy: add(x[20], mul(x[45], x[40]))
+  Operations: 2
+  Unique Features: 3
+  Token Breakdown: {'if_': 0, 'add': 1, 'sub': 0, 'mul': 1, 'pdiv': 0, 'max_': 0, 'min_': 0, 'greater_than_or_equal': 0, 'less_than_or_equal': 0}
+  Test: 15/20 (75.0%)
+
+8x8 - evolution_8x8_20251216_222007.txt
+  Strategy: mul(x[33], x[21])
+  Operations: 1
+  Unique Features: 2
+  Token Breakdown: {'if_': 0, 'add': 0, 'sub': 0, 'mul': 1, 'pdiv': 0, 'max_': 0, 'min_': 0, 'greater_than_or_equal': 0, 'less_than_or_equal': 0}
+  Test: 2/20 (10.0%)
+
+8x8 - evolution_8x8_20251218_002100.txt
+  Strategy: add(x[35], x[26])
+  Operations: 1
+  Unique Features: 2
+  Token Breakdown: {'if_': 0, 'add': 1, 'sub': 0, 'mul': 0, 'pdiv': 0, 'max_': 0, 'min_': 0, 'greater_than_or_equal': 0, 'less_than_or_equal': 0}
+  Test: 16/20 (80.0%)
+
