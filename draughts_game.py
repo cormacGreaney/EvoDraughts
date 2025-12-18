@@ -94,7 +94,12 @@ class DraughtsBoard:
         # Check for captures first
         for dr, dc in directions:
             capture_moves = self._get_capture_sequence(row, col, dr, dc, player, piece, [])
-            captures.extend(capture_moves)
+            # Filter to only include moves that start from this piece's position
+            # (continuation moves from intermediate positions will be handled automatically in make_move)
+            for move in capture_moves:
+                move_from, move_to = move
+                if move_from == (row, col):
+                    captures.append(move)
         
         # If no captures, check regular moves
         if not captures:
@@ -127,6 +132,9 @@ class DraughtsBoard:
             # Make the capture
             new_path = path + [(row, col), (land_row, land_col)]
             
+            # Always include the initial jump
+            initial_jump = ((row, col), (land_row, land_col))
+            
             # Check for further captures from the landing position
             further_captures = []
             for new_dr, new_dc in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
@@ -135,10 +143,11 @@ class DraughtsBoard:
                                                          player, piece, new_path)
                     further_captures.extend(further)
             
+            # Always include the initial jump (make_move will handle continuation automatically)
+            captures.append(initial_jump)
+            # Also include further captures for completeness (they'll be filtered in _get_piece_moves)
             if further_captures:
                 captures.extend(further_captures)
-            else:
-                captures.append(((row, col), (land_row, land_col)))
         
         return captures
     
@@ -150,6 +159,7 @@ class DraughtsBoard:
         """
         Make a move on the board.
         Returns True if move was successful, False otherwise.
+        Automatically continues multi-jump sequences per English draughts rules.
         """
         from_row, from_col = from_pos
         to_row, to_col = to_pos
@@ -166,7 +176,7 @@ class DraughtsBoard:
         col_diff = abs(to_col - from_col)
         
         if row_diff == 2 and col_diff == 2:
-            # This is a capture
+            # This is a capture - execute it and check for continuation
             captured_row = (from_row + to_row) // 2
             captured_col = (from_col + to_col) // 2
             if self.board[captured_row, captured_col] * self.current_player < 0:
@@ -178,19 +188,144 @@ class DraughtsBoard:
         self.board[to_row, to_col] = piece
         self.board[from_row, from_col] = 0
         
-        # Check for promotion to king
+        # Check for promotion to king (before checking for continuation captures)
         if piece == 1 and to_row == self.BOARD_SIZE - 1:
             self.board[to_row, to_col] = 2
+            piece = 2  # Update piece value for continuation checks
         elif piece == -1 and to_row == 0:
             self.board[to_row, to_col] = -2
+            piece = -2  # Update piece value for continuation checks
         
-        # Switch player
+        # If this was a capture, check for continuation captures (multi-jump)
+        if row_diff == 2 and col_diff == 2:
+            # Check if there are more captures available from the landing position
+            # Note: current_player hasn't switched yet, so it's still the capturing player
+            # Get the actual piece value from the board (in case it was promoted)
+            actual_piece = self.board[to_row, to_col]
+            continuation_captures = self._get_continuation_captures(to_row, to_col, self.current_player, actual_piece)
+            
+            if continuation_captures:
+                # Continue with the longest capture sequence (English draughts rule)
+                # Execute all possible continuation captures automatically
+                current_pos = (to_row, to_col)
+                current_piece = actual_piece  # Use the actual piece value (may have been promoted)
+                visited_positions = [(from_row, from_col), current_pos]  # Track visited to avoid loops
+                
+                while True:
+                    # Get all possible continuation captures from current position
+                    # Use current_piece which may have been updated if promotion occurred
+                    next_captures = self._get_continuation_captures(
+                        current_pos[0], current_pos[1], self.current_player, current_piece
+                    )
+                    
+                    if not next_captures:
+                        break  # No more captures available
+                    
+                    # Find a valid continuation capture (avoid positions we've already visited)
+                    best_capture = None
+                    
+                    for cap_from, cap_to in next_captures:
+                        # Avoid positions we've already visited in this sequence
+                        if cap_to not in visited_positions:
+                            best_capture = (cap_from, cap_to)
+                            break  # Take the first valid continuation
+                    
+                    if best_capture is None:
+                        # No valid continuation (all lead to visited positions)
+                        break
+                    
+                    # Execute the continuation capture
+                    cap_from_pos, cap_to_pos = best_capture
+                    cap_from_row, cap_from_col = cap_from_pos
+                    cap_to_row, cap_to_col = cap_to_pos
+                    
+                    # Capture the piece
+                    cap_captured_row = (cap_from_row + cap_to_row) // 2
+                    cap_captured_col = (cap_from_col + cap_to_col) // 2
+                    self.board[cap_captured_row, cap_captured_col] = 0
+                    
+                    # Move the piece
+                    self.board[cap_to_row, cap_to_col] = current_piece
+                    self.board[cap_from_row, cap_from_col] = 0
+                    
+                    # Check for promotion to king during continuation
+                    if current_piece == 1 and cap_to_row == self.BOARD_SIZE - 1:
+                        self.board[cap_to_row, cap_to_col] = 2
+                        current_piece = 2
+                    elif current_piece == -1 and cap_to_row == 0:
+                        self.board[cap_to_row, cap_to_col] = -2
+                        current_piece = -2
+                    
+                    # Update position and visited list
+                    current_pos = (cap_to_row, cap_to_col)
+                    visited_positions.append(current_pos)
+        
+        # Switch player (only after all captures in sequence are complete)
         self.current_player *= -1
         
         # Check for game over
         self._check_game_over()
         
         return True
+    
+    def _get_continuation_captures(self, row: int, col: int, player: int, piece: int) -> List[Tuple[Tuple[int, int], Tuple[int, int]]]:
+        """Get all possible capture moves from a specific position (for continuation after a jump)."""
+        captures = []
+        is_king = abs(piece) == 2
+        
+        # Determine valid directions based on piece type
+        if is_king:
+            directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+        else:
+            if piece > 0:  # Player 1 (red) - moves down
+                directions = [(1, -1), (1, 1)]
+            else:  # Player 2 (black) - moves up
+                directions = [(-1, -1), (-1, 1)]
+        
+        # Check each direction for possible captures
+        for dr, dc in directions:
+            jump_row, jump_col = row + dr, col + dc
+            land_row, land_col = row + 2*dr, col + 2*dc
+            
+            if (self._is_valid_position(jump_row, jump_col) and 
+                self._is_valid_position(land_row, land_col) and
+                self.board[jump_row, jump_col] * player < 0 and  # Opponent piece
+                self.board[land_row, land_col] == 0):  # Landing square is empty
+                captures.append(((row, col), (land_row, land_col)))
+        
+        return captures
+    
+    def _get_capture_sequence_length(self, row: int, col: int, player: int, piece: int, visited: List) -> int:
+        """Get the length of the longest capture sequence from a position (recursive helper)."""
+        max_length = 0
+        is_king = abs(piece) == 2
+        
+        # Determine valid directions
+        if is_king:
+            directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+        else:
+            if piece > 0:
+                directions = [(1, -1), (1, 1)]
+            else:
+                directions = [(-1, -1), (-1, 1)]
+        
+        for dr, dc in directions:
+            jump_row, jump_col = row + dr, col + dc
+            land_row, land_col = row + 2*dr, col + 2*dc
+            
+            if (self._is_valid_position(jump_row, jump_col) and 
+                self._is_valid_position(land_row, land_col) and
+                self.board[jump_row, jump_col] * player < 0 and
+                self.board[land_row, land_col] == 0 and
+                (land_row, land_col) not in visited):
+                
+                # Recursively check continuation
+                length = 1 + self._get_capture_sequence_length(
+                    land_row, land_col, player, piece, visited + [(land_row, land_col)]
+                )
+                max_length = max(max_length, length)
+        
+        return max_length
     
     def _check_game_over(self):
         """Check if the game is over."""
