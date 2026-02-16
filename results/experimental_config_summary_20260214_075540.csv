@@ -1,0 +1,11 @@
+Run ID,Config ID,Board Size,Population,Generations,Games per Eval,Co-evolution,Co-evolution Opponents,Result File,Date,Best Strategy,Training Fitness,Test Wins,Test Total,Test Win Rate
+20251213_034131,Config_1,6x6,100,10,10,False,,evolution_20251213_034131.txt,2025-12-13 03:41:31,x[32],0.3,2,10,0.2000
+20251213_055102,Config_3,6x6,200,100,20,False,,evolution_20251213_055102.txt,2025-12-13 05:51:02,x[8],0.275,3,10,0.3000
+20251213_083718,Config_3,6x6,200,100,20,False,,evolution_20251213_083718.txt,2025-12-13 08:37:18,"if_(greater_than_or_equal(x[0], x[25]), x[19], x[20])",0.325,3,10,0.3000
+20251214_220441,Config_2,6x6,150,30,15,True,5,evolution_20251214_220441.txt,2025-12-14 22:04:41,x[32],0.2,6,20,0.3000
+20251215_032724,Config_4,6x6,300,50,25,True,5,evolution_20251215_032724.txt,2025-12-15 03:27:24,"min_(x[45], 2.0)",,13,20,0.6500
+20251215_090842,Config_4,6x6,300,50,25,True,5,evolution_20251215_090842.txt,2025-12-15 09:08:42,"max_(if_(less_than_or_equal(x[6], 0.1), 2.0, x[20]), neg(5.0))",,,20,0.0000
+20251215_202804,Config_4,6x6,300,50,25,True,5,evolution_20251215_202804.txt,2025-12-15 20:28:04,x[20],0.23,5,20,0.2500
+20251216_034713,Config_4,6x6,300,50,25,True,5,evolution_20251216_034713.txt,2025-12-16 03:47:13,"add(x[20], mul(x[45], x[40]))",0.18,15,20,0.7500
+8x8_20251216_222007,Config_5,8x8,300,50,20,True,5,evolution_8x8_20251216_222007.txt,2025-12-16 22:20:07,"mul(x[33], x[21])",0.15,2,20,0.1000
+8x8_20251218_002100,Config_6,8x8,400,75,20,True,5,evolution_8x8_20251218_002100.txt,2025-12-18 00:21:00,"add(x[35], x[26])",0.175,16,20,0.8000

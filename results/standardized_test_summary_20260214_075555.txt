@@ -1,0 +1,100 @@
+================================================================================
+STANDARDIZED TEST EVALUATION SUMMARY
+================================================================================
+
+Evaluation Date: 2026-02-14 07:55:55
+Test Protocol:
+  - 6x6 strategies: seed=999, 20 games
+  - 8x8 strategies: seed=888, 20 games
+  - All strategies of same board size tested against identical random opponent sequence
+
+================================================================================
+6x6 STRATEGIES
+================================================================================
+
+File: evolution_20251213_034131.txt
+  Strategy: x[32]
+  Training Fitness: 0.3000
+  Old Test: 2/10 (20.0%)
+  New Test: 11/20 (55.0%)
+  Draws: 0, Losses: 9
+
+File: evolution_20251213_055102.txt
+  Strategy: x[8]
+  Training Fitness: 0.2750
+  Old Test: 3/10 (30.0%)
+  New Test: 11/20 (55.0%)
+  Draws: 1, Losses: 8
+
+File: evolution_20251214_220441.txt
+  Strategy: x[32]
+  Training Fitness: 0.2000
+  Old Test: 6/20 (30.0%)
+  New Test: 11/20 (55.0%)
+  Draws: 0, Losses: 9
+
+File: evolution_20251215_202804.txt
+  Strategy: x[20]
+  Training Fitness: 0.2300
+  Old Test: 5/20 (25.0%)
+  New Test: 11/20 (55.0%)
+  Draws: 0, Losses: 9
+
+File: evolution_20251215_032724.txt
+  Strategy: min_(x[45], 2.0)
+  Training Fitness: 0.0000
+  Old Test: 13/20 (65.0%)
+  New Test: 10/20 (50.0%)
+  Draws: 1, Losses: 9
+
+File: evolution_20251215_090842.txt
+  Strategy: max_(if_(less_than_or_equal(x[6], 0.1), 2.0, x[20]), neg(5.0))
+  Training Fitness: 0.0000
+  Old Test: 0/20 (0.0%)
+  New Test: 7/20 (35.0%)
+  Draws: 0, Losses: 13
+
+File: evolution_20251213_083718.txt
+  Strategy: if_(greater_than_or_equal(x[0], x[25]), x[19], x[20])
+  Training Fitness: 0.3250
+  Old Test: 3/10 (30.0%)
+  New Test: 5/20 (25.0%)
+  Draws: 1, Losses: 14
+
+File: evolution_20251216_034713.txt
+  Strategy: add(x[20], mul(x[45], x[40]))
+  Training Fitness: 0.1800
+  Old Test: 15/20 (75.0%)
+  New Test: 4/20 (20.0%)
+  Draws: 1, Losses: 15
+
+6x6 Statistics:
+  Mean Win Rate: 43.8%
+  Std Dev: 13.9%
+  Min: 20.0%, Max: 55.0%
+  Number of runs: 8
+
+================================================================================
+8x8 STRATEGIES
+================================================================================
+
+File: evolution_8x8_20251218_002100.txt
+  Strategy: add(x[35], x[26])
+  Training Fitness: 0.1750
+  Old Test: 16/20 (80.0%)
+  New Test: 14/20 (70.0%)
+  Draws: 1, Losses: 5
+
+File: evolution_8x8_20251216_222007.txt
+  Strategy: mul(x[33], x[21])
+  Training Fitness: 0.1500
+  Old Test: 2/20 (10.0%)
+  New Test: 12/20 (60.0%)
+  Draws: 0, Losses: 8
+
+8x8 Statistics:
+  Mean Win Rate: 65.0%
+  Std Dev: 5.0%
+  Min: 60.0%, Max: 70.0%
+  Number of runs: 2
+

@@ -126,7 +126,8 @@ MAX_GENOME_LENGTH = None
 N_GAMES_PER_EVAL = 20  # Number of games played per strategy evaluation (more = better fitness estimates)
 
 # Random seed for reproducibility (changed to get different evolutionary path)
-RANDOM_SEED = 123
+# Run 2 used 123, Run 3 uses 456 for different evolutionary path
+RANDOM_SEED = 456
 
 # Co-evolution settings (for evolve_draughts2.py)
 USE_COEVOLUTION = True

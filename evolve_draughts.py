@@ -374,16 +374,34 @@ def main():
             f.write(f"Genome Length: {len(best.genome)}\n")
             f.write(f"Used Codons: {best.used_codons}/{len(best.genome)} ({best.used_codons/len(best.genome):.2%})\n\n")
             
-            # Test results
+            # Test results - using standardized random seed for fair comparison
+            # All 6x6 strategies tested with seed 999, all 8x8 with seed 888
+            TEST_SEED_6x6 = 999
+            TEST_SEED_8x8 = 888
+            test_seed = TEST_SEED_6x6 if BOARD_SIZE == 6 else TEST_SEED_8x8
+            
             best_strategy = strategy_from_phenotype(best.phenotype)
             test_wins = 0
-            test_games = 10
+            test_games = 20  # Increased from 10 for better statistics
+            test_draws = 0
+            test_losses = 0
+            
+            # Set fixed random seed for standardized test evaluation
+            random.seed(test_seed)
+            np.random.seed(test_seed)
+            
             for i in range(test_games):
                 result = play_game(best_strategy, random_strategy, max_moves=MAX_MOVES, board_size=BOARD_SIZE)
                 if result == 1:
                     test_wins += 1
+                elif result == 0:
+                    test_draws += 1
+                else:
+                    test_losses += 1
             
-            f.write(f"Test Results (vs Random): {test_wins}/{test_games} wins ({test_wins/test_games:.1%})\n\n")
+            f.write(f"Test Results (vs Random, standardized seed={test_seed}): {test_wins}/{test_games} wins ({test_wins/test_games:.1%})\n")
+            f.write(f"  Draws: {test_draws}, Losses: {test_losses}\n")
+            f.write(f"  Note: All {BOARD_SIZE}x{BOARD_SIZE} strategies tested against same random opponent sequence\n\n")
         
         f.write("Generation Statistics:\n")
         f.write("-" * 60 + "\n")
