@@ -34,6 +34,7 @@ try:
     from config import ITERATION_3
     # Run 2: Import new co-evolution ratio and complexity penalty
     from config import COEVOLUTION_RATIO_8x8, COMPLEXITY_PENALTY_8x8
+    from config import TEST_SEEDS_8x8, TEST_GAMES_PER_SEED
     P_MUTATION = P_MUTATION_8x8  # Use 8x8 mutation rate
     
     BOARD_SIZE = ITERATION_3['board_size']
@@ -71,6 +72,8 @@ except ImportError:
     # Run 2: Default values if config import fails
     COEVOLUTION_RATIO_8x8 = 0.4  # 40% co-evolved, 60% random (Run 2)
     COMPLEXITY_PENALTY_8x8 = 0.20  # Increased from 0.15 (Run 2)
+    TEST_SEEDS_8x8 = [888, 889, 890, 891, 892]
+    TEST_GAMES_PER_SEED = 30
 
 # Set random seed
 random.seed(RANDOM_SEED)
@@ -434,12 +437,16 @@ def main():
         f.write("=" * 60 + "\n")
         f.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write(f"Board Size: {BOARD_SIZE}x{BOARD_SIZE}\n")
+        f.write(f"Evolution Seed: {RANDOM_SEED}\n")
         f.write(f"Population Size: {POPULATION_SIZE}\n")
         f.write(f"Generations: {MAX_GENERATIONS}\n")
         f.write(f"Games per Evaluation: {N_GAMES_PER_EVAL}\n")
         f.write(f"Co-evolution: {USE_COEVOLUTION}\n")
         if USE_COEVOLUTION:
             f.write(f"Co-evolution Opponents: {COEVOLUTION_OPPONENTS}\n")
+            f.write(f"Co-evolution Ratio: {COEVOLUTION_RATIO_8x8:.2f} (co-evolved), {1-COEVOLUTION_RATIO_8x8:.2f} (random)\n")
+        f.write(f"Mutation Rate: {P_MUTATION}\n")
+        f.write(f"Complexity Penalty: {COMPLEXITY_PENALTY_8x8}\n")
         f.write("=" * 60 + "\n\n")
         
         if len(hof.items) > 0:
@@ -452,34 +459,37 @@ def main():
             f.write(f"Genome Length: {len(best.genome)}\n")
             f.write(f"Used Codons: {best.used_codons}/{len(best.genome)} ({best.used_codons/len(best.genome):.2%})\n\n")
             
-            # Test results - using standardized random seed for fair comparison
-            # All 6x6 strategies tested with seed 999, all 8x8 with seed 888
-            TEST_SEED_6x6 = 999
-            TEST_SEED_8x8 = 888
-            test_seed = TEST_SEED_6x6 if BOARD_SIZE == 6 else TEST_SEED_8x8
-            
+            # Test protocol: multiple seeds (5), 30 games per seed; fixed opponent set
             best_strategy = strategy_from_phenotype(best.phenotype)
-            test_wins = 0
-            test_games = 20
-            test_draws = 0
-            test_losses = 0
+            wins_per_seed = []
+            total_wins = 0
+            total_games = 0
             
-            # Set fixed random seed for standardized test evaluation
-            random.seed(test_seed)
-            np.random.seed(test_seed)
+            for test_seed in TEST_SEEDS_8x8:
+                random.seed(test_seed)
+                np.random.seed(test_seed)
+                seed_wins = 0
+                for _ in range(TEST_GAMES_PER_SEED):
+                    result = play_game(best_strategy, random_strategy, max_moves=MAX_MOVES, board_size=BOARD_SIZE)
+                    if result == 1:
+                        seed_wins += 1
+                        total_wins += 1
+                    total_games += 1
+                wins_per_seed.append(seed_wins / TEST_GAMES_PER_SEED)
             
-            for i in range(test_games):
-                result = play_game(best_strategy, random_strategy, max_moves=MAX_MOVES, board_size=BOARD_SIZE)
-                if result == 1:
-                    test_wins += 1
-                elif result == 0:
-                    test_draws += 1
-                else:
-                    test_losses += 1
+            mean_wr = total_wins / total_games
+            std_seeds = np.std(wins_per_seed) if len(wins_per_seed) > 1 else 0.0
+            # 95% CI for proportion (Wilson-style approx): z=1.96
+            n = total_games
+            z = 1.96
+            margin = z * np.sqrt(mean_wr * (1 - mean_wr) / n) if n > 0 else 0
+            ci_lo = max(0, mean_wr - margin)
+            ci_hi = min(1, mean_wr + margin)
             
-            f.write(f"Test Results (vs Random, standardized seed={test_seed}): {test_wins}/{test_games} wins ({test_wins/test_games:.1%})\n")
-            f.write(f"  Draws: {test_draws}, Losses: {test_losses}\n")
-            f.write(f"  Note: All {BOARD_SIZE}x{BOARD_SIZE} strategies tested against same random opponent sequence\n\n")
+            f.write(f"Test Protocol: seeds={TEST_SEEDS_8x8}, games_per_seed={TEST_GAMES_PER_SEED}, opponent=random (fixed set)\n")
+            f.write(f"Test Results: {total_wins}/{total_games} wins -> win rate {mean_wr:.1%} [95% CI: {ci_lo:.1%}-{ci_hi:.1%}]\n")
+            f.write(f"  Variance across seeds (std): {std_seeds:.3f}\n")
+            f.write(f"  Per-seed win rates: {[f'{x:.2f}' for x in wins_per_seed]}\n\n")
         
         f.write("Generation Statistics:\n")
         f.write("-" * 60 + "\n")

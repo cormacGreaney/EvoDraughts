@@ -126,8 +126,8 @@ MAX_GENOME_LENGTH = None
 N_GAMES_PER_EVAL = 20  # Number of games played per strategy evaluation (more = better fitness estimates)
 
 # Random seed for reproducibility (changed to get different evolutionary path)
-# Run 2 used 123, Run 3 uses 456 for different evolutionary path
-RANDOM_SEED = 456
+# Run 2: 123, Run 3: 456, Run 4: 789, Run 5: 1011, Run 6: 2001 (30% co-evol)
+RANDOM_SEED = 2001
 
 # Co-evolution settings (for evolve_draughts2.py)
 USE_COEVOLUTION = True
@@ -135,14 +135,23 @@ COEVOLUTION_OPPONENTS = 5
 USE_SELF_PLAY = False
 
 # 8x8 co-evolution opponent ratio (for evolve_draughts_8x8.py)
-# Run 1: 60% co-evolved, 40% random (caused overfitting)
-# Run 2: 40% co-evolved, 60% random (to improve generalization)
+# Run 1: 0.6, Run 2-5: 0.4, Run 6: 0.30 (30% co-evolved, 70% random)
 COEVOLUTION_RATIO_8x8_RUN1 = 0.6  # 60% co-evolved opponents
-COEVOLUTION_RATIO_8x8 = 0.4       # 40% co-evolved, 60% random (Run 2)
+COEVOLUTION_RATIO_8x8 = 0.30     # Run 6: 30% co-evolved, 70% random
 
 # 8x8 complexity penalty (for evolve_draughts_8x8.py)
 # Run 1: 0.15 (not strong enough - simple strategies still won)
 # Run 2: 0.20 (increased to encourage more complex strategies)
 COMPLEXITY_PENALTY_8x8_RUN1 = 0.15
 COMPLEXITY_PENALTY_8x8 = 0.20  # Increased from 0.15 for Run 2
+
+# ============================================================================
+# TEST PROTOCOL (post-evolution evaluation)
+# ============================================================================
+# Supervisor: multiple test seeds (5-10), more test games (30+). Opponent set fixed.
+# Used for fair comparison and CI / variance across seeds.
+TEST_SEEDS_8x8 = [888, 889, 890, 891, 892]   # 5 seeds; fixed opponent set per seed
+TEST_SEEDS_6x6 = [999, 1000, 1001, 1002, 1003]
+TEST_GAMES_PER_SEED = 30   # 30+ games per seed
+# Opponent: random baseline only. Same seeds = same opponent sequences for all strategies.
 
