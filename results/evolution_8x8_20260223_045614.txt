@@ -1,0 +1,108 @@
+============================================================
+EvoDraughts Evolution Results (8x8 Version)
+============================================================
+Date: 2026-02-23 04:56:14
+Board Size: 8x8
+Evolution Seed: 2001
+Population Size: 400
+Generations: 75
+Games per Evaluation: 20
+Co-evolution: True
+Co-evolution Opponents: 5
+Co-evolution Ratio: 0.30 (co-evolved), 0.70 (random)
+Mutation Rate: 0.15
+Complexity Penalty: 0.2
+============================================================
+
+Best Individual:
+------------------------------------------------------------
+mul(add(abs_(10.0), x[26]), x[23])
+
+Fitness: 0.0750
+Depth: 10
+Genome Length: 110
+Used Codons: 12/110 (10.91%)
+
+Test Protocol: seeds=[888, 889, 890, 891, 892], games_per_seed=30, opponent=random (fixed set)
+Test Results: 114/150 wins -> win rate 76.0% [95% CI: 69.2%-82.8%]
+  Variance across seeds (std): 0.061
+  Per-seed win rates: ['0.70', '0.77', '0.87', '0.70', '0.77']
+
+Generation Statistics:
+------------------------------------------------------------
+Generation 0: Best=0.2750, Avg=0.4940
+Generation 1: Best=0.2000, Avg=0.4220
+Generation 2: Best=0.2000, Avg=0.4153
+Generation 3: Best=0.2000, Avg=0.4214
+Generation 4: Best=0.2000, Avg=0.3977
+Generation 5: Best=0.2000, Avg=0.4136
+Generation 6: Best=0.2000, Avg=0.4084
+Generation 7: Best=0.1500, Avg=0.4044
+Generation 8: Best=0.1500, Avg=0.4036
+Generation 9: Best=0.1500, Avg=0.4271
+Generation 10: Best=0.1500, Avg=0.4392
+Generation 11: Best=0.1500, Avg=0.4458
+Generation 12: Best=0.1500, Avg=0.4549
+Generation 13: Best=0.1500, Avg=0.4493
+Generation 14: Best=0.1500, Avg=0.4600
+Generation 15: Best=0.1500, Avg=0.4505
+Generation 16: Best=0.1500, Avg=0.4536
+Generation 17: Best=0.1500, Avg=0.4487
+Generation 18: Best=0.1500, Avg=0.4549
+Generation 19: Best=0.1500, Avg=0.4453
+Generation 20: Best=0.1500, Avg=0.4558
+Generation 21: Best=0.1500, Avg=0.4408
+Generation 22: Best=0.1500, Avg=0.4634
+Generation 23: Best=0.1250, Avg=0.4510
+Generation 24: Best=0.1250, Avg=0.4387
+Generation 25: Best=0.0750, Avg=0.4475
+Generation 26: Best=0.0750, Avg=0.4539
+Generation 27: Best=0.0750, Avg=0.4545
+Generation 28: Best=0.0750, Avg=0.4469
+Generation 29: Best=0.0750, Avg=0.4531
+Generation 30: Best=0.0750, Avg=0.4566
+Generation 31: Best=0.0750, Avg=0.4526
+Generation 32: Best=0.0750, Avg=0.4545
+Generation 33: Best=0.0750, Avg=0.4538
+Generation 34: Best=0.0750, Avg=0.4448
+Generation 35: Best=0.0750, Avg=0.4356
+Generation 36: Best=0.0750, Avg=0.4297
+Generation 37: Best=0.0750, Avg=0.4266
+Generation 38: Best=0.0750, Avg=0.4217
+Generation 39: Best=0.0750, Avg=0.4288
+Generation 40: Best=0.0750, Avg=0.4418
+Generation 41: Best=0.0750, Avg=0.4378
+Generation 42: Best=0.0750, Avg=0.4419
+Generation 43: Best=0.0750, Avg=0.4436
+Generation 44: Best=0.0750, Avg=0.4306
+Generation 45: Best=0.0750, Avg=0.4352
+Generation 46: Best=0.0750, Avg=0.4256
+Generation 47: Best=0.0750, Avg=0.4310
+Generation 48: Best=0.0750, Avg=0.4263
+Generation 49: Best=0.0750, Avg=0.4222
+Generation 50: Best=0.0750, Avg=0.4201
+Generation 51: Best=0.0750, Avg=0.3982
+Generation 52: Best=0.0750, Avg=0.4099
+Generation 53: Best=0.0750, Avg=0.4171
+Generation 54: Best=0.0750, Avg=0.4185
+Generation 55: Best=0.0750, Avg=0.4135
+Generation 56: Best=0.0750, Avg=0.3982
+Generation 57: Best=0.0750, Avg=0.4013
+Generation 58: Best=0.0750, Avg=0.4041
+Generation 59: Best=0.0750, Avg=0.4128
+Generation 60: Best=0.0750, Avg=0.4088
+Generation 61: Best=0.0750, Avg=0.3914
+Generation 62: Best=0.0750, Avg=0.4130
+Generation 63: Best=0.0750, Avg=0.4094
+Generation 64: Best=0.0750, Avg=0.4135
+Generation 65: Best=0.0750, Avg=0.3961
+Generation 66: Best=0.0750, Avg=0.4001
+Generation 67: Best=0.0750, Avg=0.4092
+Generation 68: Best=0.0750, Avg=0.4189
+Generation 69: Best=0.0750, Avg=0.4114
+Generation 70: Best=0.0750, Avg=0.4110
+Generation 71: Best=0.0750, Avg=0.4080
+Generation 72: Best=0.0750, Avg=0.4227
+Generation 73: Best=0.0750, Avg=0.4010
+Generation 74: Best=0.0750, Avg=0.4116
+Generation 75: Best=0.0750, Avg=0.4079

@@ -1,0 +1,52 @@
+============================================================
+EvoDraughts Minimax-Targeted Evolution Results (8x8)
+============================================================
+Board Size: 8x8
+Population Size: 80
+Generations: 30
+Games per Evaluation: 10
+Engine depth: 2
+Max moves per game: 200
+Random Seed: 42
+============================================================
+
+Best Individual:
+------------------------------------------------------------
+sub(x[35], 0.0)
+
+Engine-based Fitness: 0.500000
+Test vs minimax engine (depth=2, games=20): W=10, D=0, L=10
+
+Generation Statistics:
+------------------------------------------------------------
+Generation 0: Best=0.700000, Avg=1.067308
+Generation 1: Best=0.700000, Avg=0.988462
+Generation 2: Best=0.700000, Avg=0.892857
+Generation 3: Best=0.700000, Avg=0.820253
+Generation 4: Best=0.700000, Avg=0.841772
+Generation 5: Best=0.700000, Avg=0.838750
+Generation 6: Best=0.700000, Avg=0.802532
+Generation 7: Best=0.700000, Avg=0.817500
+Generation 8: Best=0.700000, Avg=0.846250
+Generation 9: Best=0.700000, Avg=0.828125
+Generation 10: Best=0.700000, Avg=0.796835
+Generation 11: Best=0.700000, Avg=0.796250
+Generation 12: Best=0.700000, Avg=0.829375
+Generation 13: Best=0.700000, Avg=0.827848
+Generation 14: Best=0.700000, Avg=0.820000
+Generation 15: Best=0.500000, Avg=0.812500
+Generation 16: Best=0.500000, Avg=0.795000
+Generation 17: Best=0.500000, Avg=0.865823
+Generation 18: Best=0.500000, Avg=0.783333
+Generation 19: Best=0.500000, Avg=0.760625
+Generation 20: Best=0.500000, Avg=0.799375
+Generation 21: Best=0.500000, Avg=0.766026
+Generation 22: Best=0.500000, Avg=0.796104
+Generation 23: Best=0.500000, Avg=0.735000
+Generation 24: Best=0.500000, Avg=0.759375
+Generation 25: Best=0.500000, Avg=0.763291
+Generation 26: Best=0.500000, Avg=0.781013
+Generation 27: Best=0.500000, Avg=0.753750
+Generation 28: Best=0.500000, Avg=0.808974
+Generation 29: Best=0.500000, Avg=0.740000
+Generation 30: Best=0.500000, Avg=0.730625

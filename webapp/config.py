@@ -32,6 +32,7 @@ STRATEGY_MAPPING = {
             'evolution_8x8_20251218_002100.txt',
         ],
         'hard': [
+            'evolution_8x8_20260223_045614.txt',
         ]
     }
 }

@@ -13,11 +13,11 @@ Matches `planned_8x8_runs.md`: Config_6 baseline (runs 3–5), then **two** co-e
 | 3 | Config_6 replicate 1 | Complete | 2026-02-14 | 2026-02-16 | evolution_8x8_20260216_052949.txt | 456 |
 | 4 | Config_6 replicate 2 | Complete | 2026-02-16 | 2026-02-18 | evolution_8x8_20260218_003143.txt | 789 |
 | 5 | Config_6 replicate 3 | Complete | 2026-02-18 | 2026-02-19 | evolution_8x8_20260219_203646.txt | 1011 |
-| 6 | Co-evol 30% (Condition A) replicate 1 | In Progress | 2026-02-21 | - | - | 2001 |
-| 7 | Co-evol 30% replicate 2 | Pending | - | - | - | 2002 |
-| 8 | Co-evol 30% replicate 3 | Pending | - | - | - | 2003 |
-| 9 | Co-evol 50% (Condition B) replicate 1 | Pending | - | - | - | 2011 |
-| 10 | Co-evol 50% replicate 2 | Pending | - | - | - | 2012 |
+| 6 | Co-evol 30% (Condition A) replicate 1 | Complete | 2026-02-21 | 2026-02-23 | evolution_8x8_20260223_045614.txt | 2001 |
+| 7 | Co-evol 30% replicate 2 | Complete | 2026-02-23 | 2026-02-25 | evolution_8x8_20260225_114105.txt | 2002 |
+| 8 | Co-evol 30% replicate 3 | Complete | 2026-02-25 | 2026-02-27 | evolution_8x8_20260227_011809.txt | 2003 |
+| 9 | Co-evol 50% (Condition B) replicate 1 | Complete | 2026-02-27 | 2026-03-02 | evolution_8x8_20260302_115155.txt | 2011 |
+| 10 | Co-evol 50% replicate 2 | In Progress | 2026-03-02 | - | - | 2012 |
 | 11 | Co-evol 50% replicate 3 | Pending | - | - | - | 2013 |
 | 12 | Mutation 0.10 (Condition C) replicate 1 | Pending | - | - | - | 3011 |
 | 13 | Mutation 0.10 replicate 2 | Pending | - | - | - | 3012 |
@@ -85,20 +85,55 @@ Matches `planned_8x8_runs.md`: Config_6 baseline (runs 3–5), then **two** co-e
 - **Re-evaluation (new protocol, 5 seeds × 30 games)**: 94/150 → 62.7% [95% CI 54.9%–70.4%], train–test gap 0.32
 - **Notes**: Third replication. Strong training; re-eval with multiple seeds gives more conservative test estimate.
 
-### Run 6 (Condition A: Co-evol 30%) replicate 1 - IN PROGRESS
+### Run 6 (Condition A: Co-evol 30%) replicate 1 - COMPLETE
 - **Date Started**: 2026-02-21
-- **Configuration**: Condition A in plan — same as Config_6 except co-evolution ratio
-  - Co-evolution ratio: **30%** co-evolved, **70%** random
-  - Population: 400, Generations: 75, Games per evaluation: 20, Mutation 0.15, Complexity 0.20
+- **Date Completed**: 2026-02-23 04:56:14
+- **Configuration**: Condition A — 30% co-evolved, 70% random; Population 400, Gen 75, Games 20, Mutation 0.15, Complexity 0.20
   - Evolution seed: 2001
+- **Result File**: evolution_8x8_20260223_045614.txt
+- **Best Strategy**: `mul(add(abs_(10.0), x[26]), x[23])`
+- **Training Fitness**: 0.0750 (92.5% win rate)
+- **Test (5 seeds × 30 games)**: 114/150 → 76.0% [95% CI 69.2%–82.8%], variance across seeds 0.061
+- **Notes**: First replicate of Condition A. Strong test performance.
+
+### Run 7 (Condition A: Co-evol 30%) replicate 2 - COMPLETE
+- **Date Started**: 2026-02-23
+- **Date Completed**: 2026-02-25 11:41:05
+- **Configuration**: Same as Run 6 (30% co-evolved, 70% random). Evolution seed: 2002
+- **Result File**: evolution_8x8_20260225_114105.txt
+- **Best Strategy**: `1.0`
+- **Training Fitness**: 0.1000 (90.0% win rate)
+- **Test (5 seeds × 30 games)**: 104/150 → 69.3% [95% CI 62.0%–76.7%], variance across seeds 0.013
+- **Notes**: Second replicate of Condition A.
+
+### Run 8 (Condition A: Co-evol 30%) replicate 3 - COMPLETE
+- **Date Started**: 2026-02-25
+- **Date Completed**: 2026-02-27 01:18:09
+- **Configuration**: Same as Run 6 (30% co-evolved, 70% random). Evolution seed: 2003
+- **Result File**: evolution_8x8_20260227_011809.txt
+- **Best Strategy**: `add(if_(greater_than_or_equal(x[35], x[64]), x[44], x[44]), x[37])`
+- **Training Fitness**: 0.1000 (90.0% win rate)
+- **Test (5 seeds × 30 games)**: 100/150 → 66.7% [95% CI 59.1%–74.2%], variance across seeds 0.063
+- **Notes**: Third replicate of Condition A. Condition A (30% co-evol) complete.
+
+### Run 9 (Condition B: Co-evol 50%) replicate 1 - COMPLETE
+- **Date Started**: 2026-02-27
+- **Date Completed**: 2026-03-02 11:51:55
+- **Configuration**: Condition B — 50% co-evolved, 50% random; Population 400, Gen 75, Games 20, Mutation 0.15, Complexity 0.20. Evolution seed: 2011
+- **Result File**: evolution_8x8_20260302_115155.txt
+- **Best Strategy**: `add(x[24], x[68])`
+- **Training Fitness**: 0.0750 (92.5% win rate)
+- **Test (5 seeds × 30 games)**: 108/150 → 72.0% [95% CI 64.8%–79.2%], variance across seeds 0.027
+- **Notes**: First replicate of Condition B. Solid generalization with moderate variance across seeds.
+
+### Run 10 (Condition B: Co-evol 50%) replicate 2 - IN PROGRESS
+- **Date Started**: 2026-03-02
+- **Configuration**: Condition B — 50% co-evolved, 50% random; Population 400, Gen 75, Games 20, Mutation 0.15, Complexity 0.20. Evolution seed: 2012
 - **Result File**: [when complete]
-- **Notes**: First of 2–3 replicates for Condition A. Compare vs Config_6 (runs 3–5) and Condition B (50%, runs 9–11).
+- **Notes**: Second replicate of Condition B.
 
-### Runs 7–8 (Condition A: Co-evol 30%) replicates 2–3 - PENDING
-- **Seeds**: 2002, 2003. Same config as Run 6.
-
-### Runs 9–11 (Condition B: Co-evol 50%) replicates 1–3 - PENDING
-- **Seeds**: 2011, 2012, 2013. Co-evolution ratio 50% / 50% random; rest as Config_6.
+### Run 11 (Condition B: Co-evol 50%) replicate 3 - PENDING
+- **Seeds**: 2013. Same config as Run 9.
 
 ### Runs 12–14 (Condition C: Mutation 0.10) replicates 1–3 - PENDING
 - **Seeds**: 3011, 3012, 3013. Mutation rate 0.10; rest as Config_6.
@@ -131,11 +166,11 @@ COMPLEXITY_PENALTY_8x8 = 0.20
 | 3 | Config_6 rep 1 | 456 | evolution_8x8_20260216_052949.txt |
 | 4 | Config_6 rep 2 | 789 | evolution_8x8_20260218_003143.txt |
 | 5 | Config_6 rep 3 | 1011 | evolution_8x8_20260219_203646.txt |
-| 6 | Co-evol 30% rep 1 | 2001 | (in progress) |
-| 7 | Co-evol 30% rep 2 | 2002 | - |
-| 8 | Co-evol 30% rep 3 | 2003 | - |
-| 9 | Co-evol 50% rep 1 | 2011 | - |
-| 10 | Co-evol 50% rep 2 | 2012 | - |
+| 6 | Co-evol 30% rep 1 | 2001 | evolution_8x8_20260223_045614.txt |
+| 7 | Co-evol 30% rep 2 | 2002 | evolution_8x8_20260225_114105.txt |
+| 8 | Co-evol 30% rep 3 | 2003 | evolution_8x8_20260227_011809.txt |
+| 9 | Co-evol 50% rep 1 | 2011 | evolution_8x8_20260302_115155.txt |
+| 10 | Co-evol 50% rep 2 | 2012 | (in progress) |
 | 11 | Co-evol 50% rep 3 | 2013 | - |
 | 12 | Mutation 0.10 rep 1 | 3011 | - |
 | 13 | Mutation 0.10 rep 2 | 3012 | - |

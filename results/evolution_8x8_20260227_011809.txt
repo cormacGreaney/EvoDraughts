@@ -1,0 +1,108 @@
+============================================================
+EvoDraughts Evolution Results (8x8 Version)
+============================================================
+Date: 2026-02-27 01:18:09
+Board Size: 8x8
+Evolution Seed: 2003
+Population Size: 400
+Generations: 75
+Games per Evaluation: 20
+Co-evolution: True
+Co-evolution Opponents: 5
+Co-evolution Ratio: 0.30 (co-evolved), 0.70 (random)
+Mutation Rate: 0.15
+Complexity Penalty: 0.2
+============================================================
+
+Best Individual:
+------------------------------------------------------------
+add(if_(greater_than_or_equal(x[35], x[64]), x[44], x[44]), x[37])
+
+Fitness: 0.1000
+Depth: 8
+Genome Length: 135
+Used Codons: 14/135 (10.37%)
+
+Test Protocol: seeds=[888, 889, 890, 891, 892], games_per_seed=30, opponent=random (fixed set)
+Test Results: 100/150 wins -> win rate 66.7% [95% CI: 59.1%-74.2%]
+  Variance across seeds (std): 0.063
+  Per-seed win rates: ['0.73', '0.57', '0.63', '0.73', '0.67']
+
+Generation Statistics:
+------------------------------------------------------------
+Generation 0: Best=0.1750, Avg=0.4924
+Generation 1: Best=0.1750, Avg=0.4243
+Generation 2: Best=0.1750, Avg=0.4147
+Generation 3: Best=0.1750, Avg=0.4046
+Generation 4: Best=0.1750, Avg=0.4082
+Generation 5: Best=0.1750, Avg=0.4156
+Generation 6: Best=0.1250, Avg=0.4048
+Generation 7: Best=0.1250, Avg=0.4153
+Generation 8: Best=0.1250, Avg=0.4191
+Generation 9: Best=0.1250, Avg=0.4405
+Generation 10: Best=0.1250, Avg=0.4523
+Generation 11: Best=0.1250, Avg=0.4484
+Generation 12: Best=0.1250, Avg=0.4446
+Generation 13: Best=0.1250, Avg=0.4455
+Generation 14: Best=0.1250, Avg=0.4367
+Generation 15: Best=0.1250, Avg=0.4426
+Generation 16: Best=0.1250, Avg=0.4544
+Generation 17: Best=0.1250, Avg=0.4509
+Generation 18: Best=0.1250, Avg=0.4596
+Generation 19: Best=0.1250, Avg=0.4491
+Generation 20: Best=0.1250, Avg=0.4427
+Generation 21: Best=0.1250, Avg=0.4494
+Generation 22: Best=0.1250, Avg=0.4513
+Generation 23: Best=0.1250, Avg=0.4509
+Generation 24: Best=0.1250, Avg=0.4531
+Generation 25: Best=0.1250, Avg=0.4466
+Generation 26: Best=0.1250, Avg=0.4449
+Generation 27: Best=0.1250, Avg=0.4369
+Generation 28: Best=0.1250, Avg=0.4386
+Generation 29: Best=0.1250, Avg=0.4361
+Generation 30: Best=0.1250, Avg=0.4415
+Generation 31: Best=0.1250, Avg=0.4339
+Generation 32: Best=0.1250, Avg=0.4407
+Generation 33: Best=0.1250, Avg=0.4385
+Generation 34: Best=0.1250, Avg=0.4333
+Generation 35: Best=0.1250, Avg=0.4323
+Generation 36: Best=0.1250, Avg=0.4348
+Generation 37: Best=0.1250, Avg=0.4402
+Generation 38: Best=0.1250, Avg=0.4521
+Generation 39: Best=0.1250, Avg=0.4303
+Generation 40: Best=0.1250, Avg=0.4314
+Generation 41: Best=0.1250, Avg=0.4295
+Generation 42: Best=0.1250, Avg=0.4426
+Generation 43: Best=0.1250, Avg=0.4304
+Generation 44: Best=0.1250, Avg=0.4315
+Generation 45: Best=0.1250, Avg=0.4317
+Generation 46: Best=0.1250, Avg=0.4357
+Generation 47: Best=0.1250, Avg=0.4400
+Generation 48: Best=0.1000, Avg=0.4254
+Generation 49: Best=0.1000, Avg=0.4352
+Generation 50: Best=0.1000, Avg=0.4297
+Generation 51: Best=0.1000, Avg=0.4383
+Generation 52: Best=0.1000, Avg=0.4321
+Generation 53: Best=0.1000, Avg=0.4369
+Generation 54: Best=0.1000, Avg=0.4314
+Generation 55: Best=0.1000, Avg=0.4431
+Generation 56: Best=0.1000, Avg=0.4290
+Generation 57: Best=0.1000, Avg=0.4399
+Generation 58: Best=0.1000, Avg=0.4416
+Generation 59: Best=0.1000, Avg=0.4394
+Generation 60: Best=0.1000, Avg=0.4467
+Generation 61: Best=0.1000, Avg=0.4397
+Generation 62: Best=0.1000, Avg=0.4469
+Generation 63: Best=0.1000, Avg=0.4493
+Generation 64: Best=0.1000, Avg=0.4473
+Generation 65: Best=0.1000, Avg=0.4383
+Generation 66: Best=0.1000, Avg=0.4467
+Generation 67: Best=0.1000, Avg=0.4522
+Generation 68: Best=0.1000, Avg=0.4489
+Generation 69: Best=0.1000, Avg=0.4447
+Generation 70: Best=0.1000, Avg=0.4481
+Generation 71: Best=0.1000, Avg=0.4423
+Generation 72: Best=0.1000, Avg=0.4609
+Generation 73: Best=0.1000, Avg=0.4514
+Generation 74: Best=0.1000, Avg=0.4749
+Generation 75: Best=0.1000, Avg=0.4565
