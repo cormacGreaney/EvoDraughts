@@ -1,0 +1,173 @@
+================================================================================
+STANDARDIZED TEST EVALUATION SUMMARY
+================================================================================
+
+Evaluation Date: 2026-03-04 13:24:45
+Test Protocol:
+  - 6x6: seeds=[999, 1000, 1001, 1002, 1003], 30 games/seed
+  - 8x8: seeds=[888, 889, 890, 891, 892], 30 games/seed
+  - Opponent: random baseline (fixed set per seed)
+
+================================================================================
+6x6 STRATEGIES
+================================================================================
+
+File: evolution_20251213_055102.txt
+  Strategy: x[8]
+  Training Fitness: 0.2750
+  Test: 80/150 -> 53.3% [95% CI: 45.3%-61.3%]
+  Variance across seeds (std): 0.070
+  Train-test gap: 19.2%
+
+File: evolution_20251215_032724.txt
+  Strategy: min_(x[45], 2.0)
+  Training Fitness: 0.0000
+  Test: 71/150 -> 47.3% [95% CI: 39.3%-55.3%]
+  Variance across seeds (std): 0.108
+  Train-test gap: 52.7%
+
+File: evolution_20251213_034131.txt
+  Strategy: x[32]
+  Training Fitness: 0.3000
+  Test: 65/150 -> 43.3% [95% CI: 35.4%-51.3%]
+  Variance across seeds (std): 0.112
+  Train-test gap: 26.7%
+
+File: evolution_20251214_220441.txt
+  Strategy: x[32]
+  Training Fitness: 0.2000
+  Test: 65/150 -> 43.3% [95% CI: 35.4%-51.3%]
+  Variance across seeds (std): 0.112
+  Train-test gap: 36.7%
+
+File: evolution_20251215_090842.txt
+  Strategy: max_(if_(less_than_or_equal(x[6], 0.1), 2.0, x[20]), neg(5.0))
+  Training Fitness: 0.0000
+  Test: 65/150 -> 43.3% [95% CI: 35.4%-51.3%]
+  Variance across seeds (std): 0.063
+  Train-test gap: 56.7%
+
+File: evolution_20251215_202804.txt
+  Strategy: x[20]
+  Training Fitness: 0.2300
+  Test: 54/150 -> 36.0% [95% CI: 28.3%-43.7%]
+  Variance across seeds (std): 0.065
+  Train-test gap: 41.0%
+
+File: evolution_20251213_083718.txt
+  Strategy: if_(greater_than_or_equal(x[0], x[25]), x[19], x[20])
+  Training Fitness: 0.3250
+  Test: 50/150 -> 33.3% [95% CI: 25.8%-40.9%]
+  Variance across seeds (std): 0.052
+  Train-test gap: 34.2%
+
+File: evolution_20251216_034713.txt
+  Strategy: add(x[20], mul(x[45], x[40]))
+  Training Fitness: 0.1800
+  Test: 43/150 -> 28.7% [95% CI: 21.4%-35.9%]
+  Variance across seeds (std): 0.072
+  Train-test gap: 53.3%
+
+6x6 Statistics:
+  Mean Win Rate: 41.1%
+  Std Dev: 7.5%
+  Min: 28.7%, Max: 53.3%
+  Number of runs: 8
+
+================================================================================
+8x8 STRATEGIES (MAIN RUNS)
+================================================================================
+
+File: evolution_8x8_20260216_052949.txt
+  Strategy: sub(add(if_(less_than_or_equal(5.0, 2.0), -0.1, add(x[19], 0.0)), x[11]), -0.5)
+  Training Fitness: 0.1250
+  Test: 108/150 -> 72.0% [95% CI: 64.8%-79.2%]
+  Variance across seeds (std): 0.088
+  Train-test gap: 15.5%
+
+File: evolution_8x8_20260225_114105.txt
+  Strategy: 1.0
+  Training Fitness: 0.1000
+  Test: 103/150 -> 68.7% [95% CI: 61.2%-76.1%]
+  Variance across seeds (std): 0.100
+  Train-test gap: 21.3%
+
+File: evolution_8x8_20251218_002100.txt
+  Strategy: add(x[35], x[26])
+  Training Fitness: 0.1750
+  Test: 101/150 -> 67.3% [95% CI: 59.8%-74.8%]
+  Variance across seeds (std): 0.049
+  Train-test gap: 15.2%
+
+File: evolution_8x8_20260218_003143.txt
+  Strategy: add(if_(greater_than_or_equal(mul(x[49], 10.0), x[57]), x[39], 0.5), x[19])
+  Training Fitness: 0.0750
+  Test: 101/150 -> 67.3% [95% CI: 59.8%-74.8%]
+  Variance across seeds (std): 0.077
+  Train-test gap: 25.2%
+
+File: evolution_8x8_20260302_115155.txt
+  Strategy: add(x[24], x[68])
+  Training Fitness: 0.0750
+  Test: 101/150 -> 67.3% [95% CI: 59.8%-74.8%]
+  Variance across seeds (std): 0.095
+  Train-test gap: 25.2%
+
+File: evolution_8x8_20260227_011809.txt
+  Strategy: add(if_(greater_than_or_equal(x[35], x[64]), x[44], x[44]), x[37])
+  Training Fitness: 0.1000
+  Test: 99/150 -> 66.0% [95% CI: 58.4%-73.6%]
+  Variance across seeds (std): 0.077
+  Train-test gap: 24.0%
+
+File: evolution_8x8_20251216_222007.txt
+  Strategy: mul(x[33], x[21])
+  Training Fitness: 0.1500
+  Test: 95/150 -> 63.3% [95% CI: 55.6%-71.0%]
+  Variance across seeds (std): 0.030
+  Train-test gap: 21.7%
+
+File: evolution_8x8_20260219_203646.txt
+  Strategy: mul(x[73], x[24])
+  Training Fitness: 0.0500
+  Test: 94/150 -> 62.7% [95% CI: 54.9%-70.4%]
+  Variance across seeds (std): 0.071
+  Train-test gap: 32.3%
+
+File: evolution_8x8_20260223_045614.txt
+  Strategy: mul(add(abs_(10.0), x[26]), x[23])
+  Training Fitness: 0.0750
+  Test: 92/150 -> 61.3% [95% CI: 53.5%-69.1%]
+  Variance across seeds (std): 0.062
+  Train-test gap: 31.2%
+
+8x8 Statistics (Main Runs):
+  Mean Win Rate: 66.2%
+  Std Dev: 3.1%
+  Min: 61.3%, Max: 72.0%
+  Number of runs: 9
+
+================================================================================
+8x8 STRATEGIES (MINIMAX-TARGETED RUNS)
+================================================================================
+
+File: evolution_minimax_8x8_20260303_173549.txt
+  Strategy: sub(x[35], 0.0)
+  Training Fitness: 0.5000
+  Test: 105/150 -> 70.0% [95% CI: 62.7%-77.3%]
+  Variance across seeds (std): 0.060
+  Train-test gap: -20.0%
+
+File: evolution_minimax_8x8_20260304_020220.txt
+  Strategy: add(x[68], sub(x[73], x[0]))
+  Training Fitness: 0.2500
+  Test: 93/150 -> 62.0% [95% CI: 54.2%-69.8%]
+  Variance across seeds (std): 0.050
+  Train-test gap: 13.0%
+
+8x8 Statistics (Minimax-Targeted):
+  Mean Win Rate: 66.0%
+  Std Dev: 4.0%
+  Min: 62.0%, Max: 70.0%
+  Number of runs: 2
+

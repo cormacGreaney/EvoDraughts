@@ -212,13 +212,13 @@ def main():
     print("=" * 80)
     print()
     
-    # Re-evaluate each strategy (multi-seed protocol)
+    # Re-evaluate each strategy from main evolution runs (multi-seed protocol)
     test_seeds_6x6 = TEST_SEEDS_6x6
     test_seeds_8x8 = TEST_SEEDS_8x8
     games_per_seed = TEST_GAMES_PER_SEED
     total_games_per_strategy = len(test_seeds_8x8) * games_per_seed  # same for 6x6
 
-    re_evaluated = []
+    re_evaluated_main = []
     for i, result in enumerate(parsed_results, 1):
         print(f"[{i}/{len(parsed_results)}] Re-evaluating {result['file']}...", end=' ', flush=True)
         board_size = result['board_size']
@@ -244,11 +244,55 @@ def main():
             else:
                 result['train_win_rate'] = None
                 result['train_test_gap'] = None
-            re_evaluated.append(result)
+            result['source'] = 'main'
+            re_evaluated_main.append(result)
             print(f"OK {out['total_wins']}/{out['total_games']} -> {out['mean_wr']:.1%} [CI {out['ci_lo']:.1%}-{out['ci_hi']:.1%}]")
         except Exception as e:
             print(f"ERROR: {e}")
     
+    # Re-evaluate minimax-targeted 8x8 strategies, if any
+    re_evaluated_minimax = []
+    minimax_dir = Path('engine_eval/minimax_results')
+    if minimax_dir.exists():
+        minimax_files = list(minimax_dir.glob('evolution_minimax_8x8_*.txt'))
+        if minimax_files:
+            print()
+            print("=" * 80)
+            print("RE-EVALUATING MINIMAX-TARGETED 8x8 STRATEGIES")
+            print("=" * 80)
+            print()
+            for i, filepath in enumerate(minimax_files, 1):
+                print(f"[minimax {i}/{len(minimax_files)}] Re-evaluating {filepath.name}...", end=' ', flush=True)
+                try:
+                    result = parse_result_file(str(filepath))
+                    if not result['strategy'] or result['board_size'] != 8:
+                        print("Skipped (missing strategy or not 8x8)")
+                        continue
+                    out = evaluate_strategy_multi_seed(
+                        result['strategy'], 8, test_seeds_8x8, games_per_seed
+                    )
+                    result['new_test_wins'] = out['total_wins']
+                    result['new_test_total_games'] = out['total_games']
+                    result['new_test_win_rate'] = out['mean_wr']
+                    result['new_test_ci_lo'] = out['ci_lo']
+                    result['new_test_ci_hi'] = out['ci_hi']
+                    result['new_test_std_seeds'] = out['std_seeds']
+                    result['new_test_wins_per_seed'] = out['wins_per_seed']
+                    result['test_seeds'] = test_seeds_8x8
+                    result['test_games_per_seed'] = games_per_seed
+                    if result.get('fitness') is not None:
+                        result['train_win_rate'] = 1.0 - result['fitness']
+                        result['train_test_gap'] = result['train_win_rate'] - out['mean_wr']
+                    else:
+                        result['train_win_rate'] = None
+                        result['train_test_gap'] = None
+                    result['source'] = 'minimax'
+                    re_evaluated_minimax.append(result)
+                    print(f"OK {out['total_wins']}/{out['total_games']} -> {out['mean_wr']:.1%} [CI {out['ci_lo']:.1%}-{out['ci_hi']:.1%}]")
+                except Exception as e:
+                    print(f"ERROR: {e}")
+
+    re_evaluated = re_evaluated_main + re_evaluated_minimax
     print()
     print("=" * 80)
     print("SAVING RESULTS")
@@ -302,9 +346,10 @@ def main():
         f.write(f"  - 8x8: seeds={test_seeds_8x8}, {games_per_seed} games/seed\n")
         f.write(f"  - Opponent: random baseline (fixed set per seed)\n\n")
         
-        # Group by board size
+        # Group by board size and source
         results_6x6 = [r for r in re_evaluated if r['board_size'] == 6]
-        results_8x8 = [r for r in re_evaluated if r['board_size'] == 8]
+        results_8x8_main = [r for r in re_evaluated if r['board_size'] == 8 and r.get('source') == 'main']
+        results_8x8_minimax = [r for r in re_evaluated if r['board_size'] == 8 and r.get('source') == 'minimax']
         
         if results_6x6:
             f.write("=" * 80 + "\n")
@@ -329,12 +374,12 @@ def main():
             f.write(f"  Min: {np.min(win_rates):.1%}, Max: {np.max(win_rates):.1%}\n")
             f.write(f"  Number of runs: {len(results_6x6)}\n\n")
         
-        if results_8x8:
+        if results_8x8_main:
             f.write("=" * 80 + "\n")
-            f.write("8x8 STRATEGIES\n")
+            f.write("8x8 STRATEGIES (MAIN RUNS)\n")
             f.write("=" * 80 + "\n\n")
             
-            for result in sorted(results_8x8, key=lambda x: x['new_test_win_rate'], reverse=True):
+            for result in sorted(results_8x8_main, key=lambda x: x['new_test_win_rate'], reverse=True):
                 f.write(f"File: {result['file']}\n")
                 f.write(f"  Strategy: {result['strategy']}\n")
                 f.write(f"  Training Fitness: {result['fitness']:.4f}\n")
@@ -345,12 +390,34 @@ def main():
                 f.write("\n")
             
             # Statistics
-            win_rates = [r['new_test_win_rate'] for r in results_8x8]
-            f.write(f"8x8 Statistics:\n")
+            win_rates = [r['new_test_win_rate'] for r in results_8x8_main]
+            f.write(f"8x8 Statistics (Main Runs):\n")
             f.write(f"  Mean Win Rate: {np.mean(win_rates):.1%}\n")
             f.write(f"  Std Dev: {np.std(win_rates):.1%}\n")
             f.write(f"  Min: {np.min(win_rates):.1%}, Max: {np.max(win_rates):.1%}\n")
-            f.write(f"  Number of runs: {len(results_8x8)}\n\n")
+            f.write(f"  Number of runs: {len(results_8x8_main)}\n\n")
+
+        if results_8x8_minimax:
+            f.write("=" * 80 + "\n")
+            f.write("8x8 STRATEGIES (MINIMAX-TARGETED RUNS)\n")
+            f.write("=" * 80 + "\n\n")
+
+            for result in sorted(results_8x8_minimax, key=lambda x: x['new_test_win_rate'], reverse=True):
+                f.write(f"File: {result['file']}\n")
+                f.write(f"  Strategy: {result['strategy']}\n")
+                f.write(f"  Training Fitness: {result['fitness']:.4f}\n")
+                f.write(f"  Test: {result['new_test_wins']}/{result['new_test_total_games']} -> {result['new_test_win_rate']:.1%} [95% CI: {result['new_test_ci_lo']:.1%}-{result['new_test_ci_hi']:.1%}]\n")
+                f.write(f"  Variance across seeds (std): {result['new_test_std_seeds']:.3f}\n")
+                if result.get('train_test_gap') is not None:
+                    f.write(f"  Train-test gap: {result['train_test_gap']:.1%}\n")
+                f.write("\n")
+
+            win_rates_mm = [r['new_test_win_rate'] for r in results_8x8_minimax]
+            f.write(f"8x8 Statistics (Minimax-Targeted):\n")
+            f.write(f"  Mean Win Rate: {np.mean(win_rates_mm):.1%}\n")
+            f.write(f"  Std Dev: {np.std(win_rates_mm):.1%}\n")
+            f.write(f"  Min: {np.min(win_rates_mm):.1%}, Max: {np.max(win_rates_mm):.1%}\n")
+            f.write(f"  Number of runs: {len(results_8x8_minimax)}\n\n")
     
     print(f"Saved summary report to: {report_filename}")
     print()

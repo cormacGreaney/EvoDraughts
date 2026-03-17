@@ -1,0 +1,62 @@
+============================================================
+EvoDraughts Minimax-Targeted Evolution Results (8x8)
+============================================================
+Board Size: 8x8
+Population Size: 80
+Generations: 40
+Games per Evaluation: 20
+Engine depth: 2
+Max moves per game: 200
+Random Seed: 42
+============================================================
+
+Best Individual:
+------------------------------------------------------------
+add(x[68], sub(x[73], x[0]))
+
+Engine-based Fitness: 0.250000
+Test vs minimax engine (depth=2, games=20): W=10, D=10, L=0
+
+Generation Statistics:
+------------------------------------------------------------
+Generation 0: Best=0.800000, Avg=1.115385
+Generation 1: Best=0.800000, Avg=1.024359
+Generation 2: Best=0.800000, Avg=0.964286
+Generation 3: Best=0.800000, Avg=0.913924
+Generation 4: Best=0.800000, Avg=0.936709
+Generation 5: Best=0.800000, Avg=0.930000
+Generation 6: Best=0.800000, Avg=0.900000
+Generation 7: Best=0.800000, Avg=0.913750
+Generation 8: Best=0.800000, Avg=0.941250
+Generation 9: Best=0.750000, Avg=0.921875
+Generation 10: Best=0.750000, Avg=0.932692
+Generation 11: Best=0.750000, Avg=0.896250
+Generation 12: Best=0.500000, Avg=0.926875
+Generation 13: Best=0.500000, Avg=0.928125
+Generation 14: Best=0.500000, Avg=0.890000
+Generation 15: Best=0.500000, Avg=0.810000
+Generation 16: Best=0.250000, Avg=0.786709
+Generation 17: Best=0.250000, Avg=0.776923
+Generation 18: Best=0.250000, Avg=0.726000
+Generation 19: Best=0.250000, Avg=0.754545
+Generation 20: Best=0.250000, Avg=0.720625
+Generation 21: Best=0.250000, Avg=0.741772
+Generation 22: Best=0.250000, Avg=0.755479
+Generation 23: Best=0.250000, Avg=0.716000
+Generation 24: Best=0.250000, Avg=0.754545
+Generation 25: Best=0.250000, Avg=0.808667
+Generation 26: Best=0.250000, Avg=0.765190
+Generation 27: Best=0.250000, Avg=0.743671
+Generation 28: Best=0.250000, Avg=0.769737
+Generation 29: Best=0.250000, Avg=0.878481
+Generation 30: Best=0.250000, Avg=0.802500
+Generation 31: Best=0.250000, Avg=0.904545
+Generation 32: Best=0.250000, Avg=0.863924
+Generation 33: Best=0.250000, Avg=0.850633
+Generation 34: Best=0.250000, Avg=0.791892
+Generation 35: Best=0.250000, Avg=0.815541
+Generation 36: Best=0.250000, Avg=0.813816
+Generation 37: Best=0.250000, Avg=0.873418
+Generation 38: Best=0.250000, Avg=0.784000
+Generation 39: Best=0.250000, Avg=0.847403
+Generation 40: Best=0.250000, Avg=0.912338
