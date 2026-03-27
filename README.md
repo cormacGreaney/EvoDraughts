@@ -1,47 +1,61 @@
 # EvoDraughts
 
-Note: the contents of docs/ folder are not up to date right now
+EvoDraughts uses **grammatical evolution** (via the GRAPE library in `grape/`) to evolve draughts-playing strategies. Strategies are expressions generated from a grammar; they are evaluated by playing games, and better performers are selected and varied over successive generations.
 
-Using Grammatical Evolution (via GRAPE) to evolve draughts playing strategies. The strategies are basically math expressions that evaluate board positions and pick moves - and they get better over time through evolution.
+The repository includes **6×6** and **8×8** board setups, evolution scripts, a **Flask web app** to play against evolved strategies, and **results** from experiments. Additional notes (including an 8×8 experimental plan and run tracker) are in `docs/`.
 
-## What I've Got
+## Requirements
 
-- **6x6 version**: Works pretty well, got strategies winning 75%+ against random
-- **8x8 version**: Still working on this one - had some overfitting issues but making progress
-- **Web app**: Simple Flask interface to play against the evolved strategies (in `webapp/`)
-- **Multiple runs**: Been tweaking parameters and running evolutions, results are in `results/`
+- Python 3.x  
+- Dependencies: root `requirements.txt`; the web app has its own `webapp/requirements.txt`.
 
-## Quick Start
+## Installation
 
 ```bash
 pip install -r requirements.txt
-python evolve_draughts.py          # 6x6 board
-python evolve_draughts_8x8.py       # 8x8 board
 ```
 
-Or play against evolved strategies:
+For the web interface:
+
+```bash
+cd webapp
+pip install -r requirements.txt
+```
+
+## Usage
+
+**Run evolution** (from the repository root):
+
+```bash
+python evolve_draughts.py      # 6×6
+python evolve_draughts_8x8.py  # 8×8
+```
+
+Settings are centralised in `config.py`.
+
+**Play against saved strategies** (CLI):
+
 ```bash
 python play_against_evolved.py --list
 ```
 
-Or use the web interface:
+**Web interface:**
+
 ```bash
 cd webapp
-pip install -r requirements.txt
 python run.py
 ```
 
-## How It Works
+Open the URL shown in the terminal (`http://localhost:5000`).
 
-The system uses GRAPE (Grammatical Evolution framework) to evolve strategies. Each strategy is a grammar expression that takes board features and outputs a move. They play games, get evaluated, and the best ones survive to the next generation.
+## Project layout
 
-## Files
-
-- `evolve_draughts.py` - Original 6x6 evolution script
-- `evolve_draughts_8x8.py` - 8x8 version with co-evolution
-- `draughts_game.py` - Game logic
-- `config.py` - All the settings and parameters
-- `grammars/` - BNF grammars defining the strategy space
-- `results/` - some of my evolution runs and analysis
-- `webapp/` - Web interface for playing
+- `evolve_draughts.py` / `evolve_draughts_8x8.py` — evolution entry points  
+- `draughts_game.py` — game rules and engine  
+- `config.py` — configuration and iteration presets  
+- `grammars/` — BNF grammars for strategy expressions  
+- `results/` — evolution outputs and evaluation summaries  
+- `webapp/` — Flask app for human vs evolved play  
+- `docs/` — supplementary documentation (e.g. 8×8 plan, run tracker)  
+- `grape/` — GRAPE library used for grammatical evolution
 

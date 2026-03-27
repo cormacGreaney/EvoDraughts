@@ -1,4 +1,4 @@
-# Planned 8x8 Experimental Runs (Revised)
+# Planned 8x8 Experimental Runs
 
 ## Feedback Summary
 
@@ -24,55 +24,60 @@
 
 ---
 
-### 1. Co-evolution ratio (two settings, 2–3 replicates each)
+### 1. Co-evolution ratio (two settings, 3 replicates each)
 
 **Condition A – Lower co-evolution (more random)**  
+
 - Co-evolution ratio: **30%** co-evolved, 70% random  
 - All else same as Config_6 (pop 400, gen 75, games/eval 20, mutation 0.15, complexity 0.20).  
-- **Replicates**: 2–3 runs, each with a **different evolution seed** (e.g. 2001, 2002, 2003).
+- **Replicates**: 3 runs, each with a **different evolution seed** (e.g. 2001, 2002, 2003).
 
 **Condition B – Higher co-evolution**  
+
 - Co-evolution ratio: **50%** co-evolved, 50% random  
 - Same base config as above.  
-- **Replicates**: 2–3 runs, each with a **different evolution seed** (e.g. 2011, 2012, 2013).
+- **Replicates**: 3 runs, each with a **different evolution seed** (e.g. 2011, 2012, 2013).
 
-We compare A vs B (and vs Config_6 baseline from runs 3–5) using **replicate-level** metrics (e.g. mean win rate, CI, variance). Report will state that we use 2–3 replicates per condition (3+ would be better; constraint is run length).
+We compare A vs B (and vs Config_6 baseline from runs 3–5) using **replicate-level** metrics (e.g. mean win rate, CI, variance). Report will state that we use 3 replicates per condition (3+ would be better; constraint is run length).
 
 ---
 
-### 2. Mutation rate (two settings, 2–3 replicates each)
+### 2. Mutation rate (two settings, 3 replicates each)
 
 **Condition C – Lower mutation**  
+
 - Mutation rate: **0.10** (Config_6 uses 0.15).  
 - All else same as Config_6.  
-- **Replicates**: 2–3 runs, different evolution seeds (e.g. 3011, 3012, 3013).
+- **Replicates**: 3 runs, different evolution seeds (e.g. 3011, 3012, 3013).
 
 **Condition D – Higher mutation**  
+
 - Mutation rate: **0.20**.  
 - Same base config.  
-- **Replicates**: 2–3 runs, different evolution seeds (e.g. 3021, 3022, 3023).
+- **Replicates**: 3 runs, different evolution seeds (e.g. 3021, 3022, 3023).
 
-Same idea: compare C vs D (and vs Config_6) with replicate-level stats; report will own the 2–3 replicate count.
+Same idea: compare C vs D (and vs Config_6) with replicate-level stats; report will own the 3 replicate count.
 
 ---
-
-
 
 ---
 
 ## Summary table (revised runs)
 
-| Run group   | Condition              | Replicates | Evolution seeds (example) |
-|------------|-------------------------|------------|----------------------------|
-| 3–5        | Config_6 baseline       | 3          | 456, 789, 1011 (done)      |
-| 6–7 or 6–8 | Co-evol 30%             | 2–3        | 2001, 2002, 2003           |
-| 7–8 or 8–9 | Co-evol 50%             | 2–3        | 2011, 2012, 2013           |
-| 9–10 or 10–12 | Mutation 0.10        | 2–3        | 3011, 3012, 3013           |
-| 10–12 or 12–14 | Mutation 0.20       | 2–3        | 3021, 3022, 3023           |
+
+| Run group | Condition         | Replicates | Evolution seeds (example) |
+| --------- | ----------------- | ---------- | ------------------------- |
+| 3–5       | Config_6 baseline | 3          | 456, 789, 1011 (done)     |
+| 6–8       | Co-evol 30% (A)   | 3          | 2001, 2002, 2003          |
+| 9-11      | Co-evol 50% (B)   | 3          | 2011, 2012, 2013          |
+| 12-14     | Mutation 0.10 (C) | 3          | 3011, 3012, 3013          |
+| 15-17     | Mutation 0.20 (D) | 3          | 3021, 3022, 3023          |
+
 
 ---
 
 ## Notes
 
 - Same config + different evolution seed = independent replicate. We do not reuse evolution seeds across runs.  
-- All runs tracked in the experiment spreadsheet (Run ID, config, evolution seed(s), training protocol, test protocol, primary and secondary metrics). still needs to be finished, missing some info
+- All runs tracked in the experiment spreadsheet (Run ID, config, evolution seed(s), training protocol, test protocol, primary and secondary metrics).
+
