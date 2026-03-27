@@ -126,8 +126,8 @@ MAX_GENOME_LENGTH = None
 N_GAMES_PER_EVAL = 20  # Number of games played per strategy evaluation (more = better fitness estimates)
 
 # Random seed for reproducibility (changed to get different evolutionary path)
-# Run 14: 3013 (Mutation 0.10, Condition C replicate 3), Run 15: 3021 (Mutation 0.20, Condition D replicate 1)
-RANDOM_SEED = 3021
+# Run 16: 3022 (Mutation 0.20, Condition D replicate 2), Run 17: 3023 (Condition D replicate 3)
+RANDOM_SEED = 3023
 
 # Co-evolution settings (for evolve_draughts2.py)
 USE_COEVOLUTION = True
@@ -135,9 +135,9 @@ COEVOLUTION_OPPONENTS = 5
 USE_SELF_PLAY = False
 
 # 8x8 co-evolution opponent ratio (for evolve_draughts_8x8.py)
-# Run 1: 0.6, Run 2-5: 0.4, Run 6-8: 0.30, Run 9-11: 0.50 (Condition B), Run 12-14: 0.40 (Condition C, Config_6 baseline)
+# Run 1: 0.6, Run 2-5: 0.4, Run 6-8: 0.30, Run 9-11: 0.50 (Condition B), Run 12-17: 0.40 (Conditions C/D, Config_6 baseline)
 COEVOLUTION_RATIO_8x8_RUN1 = 0.6  # 60% co-evolved opponents
-COEVOLUTION_RATIO_8x8 = 0.40     # Condition C (Runs 12–14): 40% co-evolved, 60% random
+COEVOLUTION_RATIO_8x8 = 0.40     # Conditions C/D (Runs 12–17): 40% co-evolved, 60% random
 
 # 8x8 complexity penalty (for evolve_draughts_8x8.py)
 # Run 1: 0.15 (not strong enough - simple strategies still won)
