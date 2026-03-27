@@ -1,0 +1,108 @@
+============================================================
+EvoDraughts Evolution Results (8x8 Version)
+============================================================
+Date: 2026-03-20 10:41:23
+Board Size: 8x8
+Evolution Seed: 3022
+Population Size: 400
+Generations: 75
+Games per Evaluation: 20
+Co-evolution: True
+Co-evolution Opponents: 5
+Co-evolution Ratio: 0.40 (co-evolved), 0.60 (random)
+Mutation Rate: 0.2
+Complexity Penalty: 0.2
+============================================================
+
+Best Individual:
+------------------------------------------------------------
+sub(x[19], sub(x[35], x[24]))
+
+Fitness: 0.0750
+Depth: 8
+Genome Length: 146
+Used Codons: 10/146 (6.85%)
+
+Test Protocol: seeds=[888, 889, 890, 891, 892], games_per_seed=30, opponent=random (fixed set)
+Test Results: 122/150 wins -> win rate 81.3% [95% CI: 75.1%-87.6%]
+  Variance across seeds (std): 0.050
+  Per-seed win rates: ['0.77', '0.90', '0.77', '0.83', '0.80']
+
+Generation Statistics:
+------------------------------------------------------------
+Generation 0: Best=0.1750, Avg=0.5116
+Generation 1: Best=0.1750, Avg=0.4418
+Generation 2: Best=0.1750, Avg=0.4326
+Generation 3: Best=0.1750, Avg=0.4562
+Generation 4: Best=0.1750, Avg=0.4489
+Generation 5: Best=0.1750, Avg=0.4514
+Generation 6: Best=0.1750, Avg=0.4436
+Generation 7: Best=0.1750, Avg=0.4437
+Generation 8: Best=0.1500, Avg=0.4469
+Generation 9: Best=0.1500, Avg=0.4332
+Generation 10: Best=0.1500, Avg=0.4265
+Generation 11: Best=0.1500, Avg=0.4493
+Generation 12: Best=0.1500, Avg=0.4560
+Generation 13: Best=0.1250, Avg=0.4451
+Generation 14: Best=0.1250, Avg=0.4589
+Generation 15: Best=0.1250, Avg=0.4588
+Generation 16: Best=0.1250, Avg=0.4705
+Generation 17: Best=0.1250, Avg=0.4659
+Generation 18: Best=0.1250, Avg=0.4778
+Generation 19: Best=0.1250, Avg=0.4743
+Generation 20: Best=0.1250, Avg=0.4682
+Generation 21: Best=0.1250, Avg=0.4779
+Generation 22: Best=0.1250, Avg=0.4813
+Generation 23: Best=0.1250, Avg=0.4720
+Generation 24: Best=0.0750, Avg=0.4980
+Generation 25: Best=0.0750, Avg=0.4831
+Generation 26: Best=0.0750, Avg=0.4819
+Generation 27: Best=0.0750, Avg=0.4856
+Generation 28: Best=0.0750, Avg=0.4809
+Generation 29: Best=0.0750, Avg=0.4818
+Generation 30: Best=0.0750, Avg=0.4916
+Generation 31: Best=0.0750, Avg=0.4906
+Generation 32: Best=0.0750, Avg=0.4848
+Generation 33: Best=0.0750, Avg=0.4952
+Generation 34: Best=0.0750, Avg=0.4850
+Generation 35: Best=0.0750, Avg=0.4853
+Generation 36: Best=0.0750, Avg=0.4992
+Generation 37: Best=0.0750, Avg=0.4918
+Generation 38: Best=0.0750, Avg=0.4771
+Generation 39: Best=0.0750, Avg=0.4875
+Generation 40: Best=0.0750, Avg=0.4907
+Generation 41: Best=0.0750, Avg=0.4804
+Generation 42: Best=0.0750, Avg=0.4815
+Generation 43: Best=0.0750, Avg=0.4872
+Generation 44: Best=0.0750, Avg=0.4841
+Generation 45: Best=0.0750, Avg=0.4984
+Generation 46: Best=0.0750, Avg=0.4746
+Generation 47: Best=0.0750, Avg=0.4828
+Generation 48: Best=0.0750, Avg=0.4909
+Generation 49: Best=0.0750, Avg=0.4827
+Generation 50: Best=0.0750, Avg=0.4854
+Generation 51: Best=0.0750, Avg=0.4792
+Generation 52: Best=0.0750, Avg=0.4795
+Generation 53: Best=0.0750, Avg=0.4889
+Generation 54: Best=0.0750, Avg=0.4976
+Generation 55: Best=0.0750, Avg=0.4801
+Generation 56: Best=0.0750, Avg=0.4826
+Generation 57: Best=0.0750, Avg=0.4794
+Generation 58: Best=0.0750, Avg=0.4990
+Generation 59: Best=0.0750, Avg=0.4846
+Generation 60: Best=0.0750, Avg=0.4889
+Generation 61: Best=0.0750, Avg=0.4903
+Generation 62: Best=0.0750, Avg=0.4815
+Generation 63: Best=0.0750, Avg=0.4923
+Generation 64: Best=0.0750, Avg=0.4817
+Generation 65: Best=0.0750, Avg=0.4776
+Generation 66: Best=0.0750, Avg=0.4826
+Generation 67: Best=0.0750, Avg=0.4931
+Generation 68: Best=0.0750, Avg=0.4991
+Generation 69: Best=0.0750, Avg=0.4898
+Generation 70: Best=0.0750, Avg=0.4896
+Generation 71: Best=0.0750, Avg=0.4909
+Generation 72: Best=0.0750, Avg=0.4917
+Generation 73: Best=0.0750, Avg=0.4864
+Generation 74: Best=0.0750, Avg=0.4863
+Generation 75: Best=0.0750, Avg=0.4799
