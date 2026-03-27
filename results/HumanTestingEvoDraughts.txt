@@ -1,0 +1,84 @@
+EvoDraughts Human Testing
+10 Participants Testing 2 Different Strategies (All on full 8x8 board)
+5 Participants per Strategy, 5 Games per Participant
+
+Question Asked To Each Participant After Playing:
+Rate how challenging you found the games from 1 to 10 (Where 10 is impossible to beat and 1 is your confident you could beat the AI 100% of the time)
+
+
+5 on Strategy 1: evolution_8x8_20260320_104123.txt
+
+Participant 1 : Answer 5/10
+Game 1: Player Win
+Game 2: GE Win
+Game 3: Player Win
+Game 4: GE Win
+Game 5: Player Win
+
+Participant 2 : Answer 4/10
+Game 1: Player Win
+Game 2: Player Win
+Game 3: Player Win
+Game 4: GE Win
+Game 5: Player Win
+
+Participant 3 : Answer 4/10
+Game 1: GE Win
+Game 2: Player Win
+Game 3: Player Win
+Game 4: Player Win
+Game 5: Player Win 
+
+Participant 4 : Answer 7/10
+Game 1: Player Win
+Game 2: GE Win
+Game 3: GE Win
+Game 4: Player Win
+Game 5: GE Win
+
+Participant 5 : Answer 2/10
+Game 1: Player Win
+Game 2: Player Win
+Game 3: Player Win
+Game 4: Player Win
+Game 5: Player Win
+
+How 
+
+5 on Strategy 2: evolution_8x8_20260316_010459.txt
+
+Participant 6 : Answer 4/10
+Game 1: Player Win
+Game 2: GE Win
+Game 3: Player Win
+Game 4: Player Win
+Game 5: Player Win
+
+Participant 7 : Answer 3/10
+Game 1: Player Win
+Game 2: Player Win
+Game 3: Player Win
+Game 4: Player Win
+Game 5: Player Win
+
+Participant 8 : Answer 5/10
+Game 1: Player Win
+Game 2: Player Win
+Game 3: GE Win
+Game 4: Player Win
+Game 5: Player Win
+
+Participant 9 : Answer 2/10
+Game 1: Player Win
+Game 2: Player Win
+Game 3: Player Win
+Game 4: Player Win
+Game 5: Player Win
+
+Participant 10 : Answer 5/10
+Game 1: GE Win
+Game 2: Player Win
+Game 3: GE Win
+Game 4: Player Win
+Game 5: Player Win
+
