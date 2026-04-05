@@ -1,321 +1,365 @@
 """
-Analysis script for evolution results.
-Parses result files and generates visualizations.
+Generate thesis figures 2–4 from standardized test CSV + evolution result files.
+
+Figure 1 (standardised test bar chart) is produced separately by:
+    plot_standardized_test_evolution_match.py
+(do not duplicate that logic here.)
+
+Outputs under results/analysis/:
+    figure_2_train_vs_test_scatter.png
+    figure_3_8x8_test_win_rate_by_condition.png
+    figure_4_fitness_over_generations.png  (8×8 runs only; non-minimax evolution_8x8_*.txt)
 """
 
-import os
-import re
+from __future__ import annotations
+
+import argparse
 import csv
+import re
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("agg")
 import matplotlib.pyplot as plt
 import numpy as np
-from pathlib import Path
-from collections import defaultdict
+from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+RESULTS_DIR = PROJECT_ROOT / "results"
+ANALYSIS_DIR = RESULTS_DIR / "analysis"
+
+# 8x8 experimental condition per result file (see docs/run_tracker.md)
+CONDITION_BY_FILE: dict[str, str] = {
+    "evolution_8x8_20251216_222007.txt": "Config_5",
+    "evolution_8x8_20251218_002100.txt": "Baseline (Config_6)",
+    "evolution_8x8_20260216_052949.txt": "Baseline (Config_6)",
+    "evolution_8x8_20260218_003143.txt": "Baseline (Config_6)",
+    "evolution_8x8_20260219_203646.txt": "Baseline (Config_6)",
+    "evolution_8x8_20260223_045614.txt": "Condition A (30% co-ev.)",
+    "evolution_8x8_20260225_114105.txt": "Condition A (30% co-ev.)",
+    "evolution_8x8_20260227_011809.txt": "Condition A (30% co-ev.)",
+    "evolution_8x8_20260302_115155.txt": "Condition B (50% co-ev.)",
+    "evolution_8x8_20260307_093010.txt": "Condition B (50% co-ev.)",
+    "evolution_8x8_20260309_155326.txt": "Condition B (50% co-ev.)",
+    "evolution_8x8_20260311_043951.txt": "Condition C (mut. 0.10)",
+    "evolution_8x8_20260312_214315.txt": "Condition C (mut. 0.10)",
+    "evolution_8x8_20260316_010459.txt": "Condition C (mut. 0.10)",
+    "evolution_8x8_20260318_051106.txt": "Condition D (mut. 0.20)",
+    "evolution_8x8_20260320_104123.txt": "Condition D (mut. 0.20)",
+    "evolution_8x8_20260322_094426.txt": "Condition D (mut. 0.20)",
+}
+
+# Order for figure 3 (Config_5 excluded — early pilot, not part of A–D comparison)
+CONDITION_ORDER_FIG3: list[str] = [
+    "Baseline (Config_6)",
+    "Condition A (30% co-ev.)",
+    "Condition B (50% co-ev.)",
+    "Condition C (mut. 0.10)",
+    "Condition D (mut. 0.20)",
+]
 
 
-def parse_result_file(filepath):
-    """Parse an evolution result file and extract key information."""
-    with open(filepath, 'r') as f:
-        content = f.read()
-    
-    # Extract metadata
-    date_match = re.search(r'Date: (.+)', content)
-    board_size_match = re.search(r'Board Size: (\d+)x(\d+)', content)
-    pop_size_match = re.search(r'Population Size: (\d+)', content)
-    gens_match = re.search(r'Generations: (\d+)', content)
-    
-    # Extract best strategy
-    strategy_match = re.search(r'Best Individual:.*?\n-+\n(.+?)\n\n', content, re.DOTALL)
-    
-    # Extract fitness and test results
-    fitness_match = re.search(r'Fitness: ([\d.]+)', content)
-    test_match = re.search(r'Test Results.*?(\d+)/(\d+) wins', content)
-    
-    # Extract generation statistics
-    gen_stats = []
-    for line in content.split('\n'):
-        if line.startswith('Generation ') and 'Best=' in line:
-            gen_match = re.search(r'Generation (\d+): Best=([\d.]+), Avg=([\d.]+)', line)
-            if gen_match:
-                gen_stats.append({
-                    'generation': int(gen_match.group(1)),
-                    'best_fitness': float(gen_match.group(2)),
-                    'avg_fitness': float(gen_match.group(3))
-                })
-    
-    return {
-        'file': os.path.basename(filepath),
-        'date': date_match.group(1) if date_match else 'Unknown',
-        'board_size': int(board_size_match.group(1)) if board_size_match else None,
-        'population': int(pop_size_match.group(1)) if pop_size_match else None,
-        'generations': int(gens_match.group(1)) if gens_match else None,
-        'strategy': strategy_match.group(1).strip() if strategy_match else None,
-        'fitness': float(fitness_match.group(1)) if fitness_match else None,
-        'test_wins': int(test_match.group(1)) if test_match else None,
-        'test_total': int(test_match.group(2)) if test_match else None,
-        'generation_stats': gen_stats
-    }
+def _find_latest_standardized_csv() -> Path | None:
+    files = list(RESULTS_DIR.glob("standardized_test_results_evolution_match_*.csv"))
+    if not files:
+        return None
+    return max(files, key=lambda p: p.stat().st_mtime)
 
 
-def extract_features_from_strategy(strategy_str):
-    """Extract feature indices used in a strategy."""
-    # Find all x[index] patterns
-    feature_matches = re.findall(r'x\[(\d+)\]', strategy_str)
-    return [int(f) for f in feature_matches]
+def _load_csv_rows(csv_path: Path) -> list[dict[str, str]]:
+    with open(csv_path, encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
 
 
-def analyze_strategy_complexity(strategy_str):
-    """Analyze the complexity of a strategy."""
-    complexity_tokens = ['if_', 'add', 'sub', 'mul', 'pdiv', 'max_', 'min_',
-                         'greater_than_or_equal', 'less_than_or_equal']
-    
-    token_counts = {token: strategy_str.count(token) for token in complexity_tokens}
-    total_complexity = sum(token_counts.values())
-    
-    # Count features used
-    features = extract_features_from_strategy(strategy_str)
-    unique_features = len(set(features))
-    
-    return {
-        'total_operations': total_complexity,
-        'unique_features': unique_features,
-        'total_features': len(features),
-        'token_counts': token_counts,
-        'features_used': features
-    }
+def _is_minimax_row(row: dict[str, str]) -> bool:
+    fn = (row.get("Result File") or "").lower()
+    return "minimax" in fn
 
 
-def plot_evolution_progress(results, output_dir='results/analysis'):
-    """Create plots showing evolution progress across runs."""
-    os.makedirs(output_dir, exist_ok=True)
-    
-    # Extract filename without extension for cleaner labels
-    def get_short_name(filename):
-        # Remove 'evolution_' prefix and '.txt' suffix, keep date
-        name = filename.replace('evolution_', '').replace('.txt', '')
-        # Extract just the date part if it's long
-        if len(name) > 20:
-            return name[:17] + '...'
-        return name
-    
-    # Plot 1: Best Fitness Over Generations
-    fig1, ax1 = plt.subplots(figsize=(10, 6))
-    for result in results:
-        if result['generation_stats']:
-            gens = [s['generation'] for s in result['generation_stats']]
-            best = [s['best_fitness'] for s in result['generation_stats']]
-            label = f"{result['board_size']}x{result['board_size']} - {get_short_name(result['file'])}"
-            ax1.plot(gens, best, label=label, marker='o', markersize=4, linewidth=2)
-    ax1.set_xlabel('Generation', fontsize=12)
-    ax1.set_ylabel('Best Fitness (lower is better)', fontsize=12)
-    ax1.set_title('Best Fitness Over Generations', fontsize=14, fontweight='bold')
-    ax1.legend(fontsize=9, loc='best', framealpha=0.9)
-    ax1.grid(True, alpha=0.3)
-    ax1.invert_yaxis()
-    plt.tight_layout()
-    plt.savefig(f'{output_dir}/1_best_fitness.png', dpi=300, bbox_inches='tight')
-    print(f"Saved: {output_dir}/1_best_fitness.png")
-    plt.close()
-    
-    # Plot 2: Average Fitness Over Generations
-    fig2, ax2 = plt.subplots(figsize=(10, 6))
-    for result in results:
-        if result['generation_stats']:
-            gens = [s['generation'] for s in result['generation_stats']]
-            avg = [s['avg_fitness'] for s in result['generation_stats']]
-            label = f"{result['board_size']}x{result['board_size']} - {get_short_name(result['file'])}"
-            ax2.plot(gens, avg, label=label, marker='s', markersize=4, linewidth=2)
-    ax2.set_xlabel('Generation', fontsize=12)
-    ax2.set_ylabel('Average Fitness', fontsize=12)
-    ax2.set_title('Average Fitness Over Generations', fontsize=14, fontweight='bold')
-    ax2.legend(fontsize=9, loc='best', framealpha=0.9)
-    ax2.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.savefig(f'{output_dir}/2_avg_fitness.png', dpi=300, bbox_inches='tight')
-    print(f"Saved: {output_dir}/2_avg_fitness.png")
-    plt.close()
-    
-    # Plot 3: Test Performance Comparison
-    fig3, ax3 = plt.subplots(figsize=(12, 6))
-    board_sizes = []
-    test_performances = []
-    labels = []
-    for result in results:
-        if result['test_wins'] is not None and result['test_total'] is not None:
-            board_sizes.append(result['board_size'])
-            test_perf = (result['test_wins'] / result['test_total']) * 100
-            test_performances.append(test_perf)
-            labels.append(f"{result['board_size']}x{result['board_size']}\n{get_short_name(result['file'])}")
-    
-    if board_sizes:
-        bars = ax3.bar(range(len(test_performances)), test_performances, 
-                       color=['#2ecc71' if p > 50 else '#e74c3c' for p in test_performances])
-        ax3.set_xticks(range(len(test_performances)))
-        ax3.set_xticklabels(labels, rotation=45, ha='right', fontsize=10)
-        ax3.set_ylabel('Test Win Rate (%)', fontsize=12)
-        ax3.set_title('Test Performance Comparison', fontsize=14, fontweight='bold')
-        ax3.axhline(y=50, color='gray', linestyle='--', alpha=0.5, label='Random baseline')
-        ax3.legend(fontsize=10)
-        ax3.grid(True, alpha=0.3, axis='y')
-        
-        # Add value labels on bars
-        for bar, perf in zip(bars, test_performances):
-            height = bar.get_height()
-            ax3.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{perf:.1f}%', ha='center', va='bottom', fontsize=10)
-    plt.tight_layout()
-    plt.savefig(f'{output_dir}/3_test_performance.png', dpi=300, bbox_inches='tight')
-    print(f"Saved: {output_dir}/3_test_performance.png")
-    plt.close()
-    
-    # Plot 4: Training vs Test Performance
-    fig4, ax4 = plt.subplots(figsize=(10, 6))
-    training_perfs = []
-    test_perfs = []
-    labels_tt = []
-    for result in results:
-        if result['fitness'] is not None and result['test_wins'] is not None:
-            training_perf = (1 - result['fitness']) * 100
-            test_perf = (result['test_wins'] / result['test_total']) * 100 if result['test_total'] else 0
-            training_perfs.append(training_perf)
-            test_perfs.append(test_perf)
-            labels_tt.append(f"{result['board_size']}x{result['board_size']}\n{get_short_name(result['file'])}")
-    
-    if training_perfs:
-        x = np.arange(len(training_perfs))
-        width = 0.35
-        ax4.bar(x - width/2, training_perfs, width, label='Training', color='#3498db', alpha=0.8)
-        ax4.bar(x + width/2, test_perfs, width, label='Test', color='#e67e22', alpha=0.8)
-        ax4.set_ylabel('Win Rate (%)', fontsize=12)
-        ax4.set_title('Training vs Test Performance', fontsize=14, fontweight='bold')
-        ax4.set_xticks(x)
-        ax4.set_xticklabels(labels_tt, fontsize=10)
-        ax4.legend(fontsize=11)
-        ax4.grid(True, alpha=0.3, axis='y')
-        ax4.axhline(y=50, color='gray', linestyle='--', alpha=0.5)
-    plt.tight_layout()
-    plt.savefig(f'{output_dir}/4_training_vs_test.png', dpi=300, bbox_inches='tight')
-    print(f"Saved: {output_dir}/4_training_vs_test.png")
-    plt.close()
+def _float(row: dict[str, str], key: str, default: float = float("nan")) -> float:
+    try:
+        return float(row[key])
+    except (KeyError, ValueError, TypeError):
+        return default
 
 
-def generate_report(results, output_dir='results/analysis'):
-    """Generate text report summarizing evolution results."""
-    os.makedirs(output_dir, exist_ok=True)
-    
-    report_path = f'{output_dir}/analysis_report.txt'
-    with open(report_path, 'w') as f:
-        f.write("=" * 80 + "\n")
-        f.write("EVODRAUGHTS - EVOLUTION RESULTS ANALYSIS REPORT\n")
-        f.write("=" * 80 + "\n\n")
-        
-        f.write(f"Total Runs Analyzed: {len(results)}\n\n")
-        
-        # Best performers
-        f.write("BEST PERFORMERS\n")
-        f.write("-" * 80 + "\n")
-        
-        best_6x6 = None
-        best_8x8 = None
-        
-        for result in results:
-            if result['test_wins'] is not None and result['test_total'] is not None:
-                test_perf = result['test_wins'] / result['test_total']
-                if result['board_size'] == 6:
-                    if best_6x6 is None or test_perf > (best_6x6['test_wins'] / best_6x6['test_total']):
-                        best_6x6 = result
-                elif result['board_size'] == 8:
-                    if best_8x8 is None or test_perf > (best_8x8['test_wins'] / best_8x8['test_total']):
-                        best_8x8 = result
-        
-        if best_6x6:
-            f.write(f"\nBest 6x6 Strategy:\n")
-            f.write(f"  File: {best_6x6['file']}\n")
-            f.write(f"  Strategy: {best_6x6['strategy']}\n")
-            f.write(f"  Training Fitness: {best_6x6['fitness']:.4f} ({100*(1-best_6x6['fitness']):.1f}% win rate)\n")
-            f.write(f"  Test Performance: {best_6x6['test_wins']}/{best_6x6['test_total']} ({100*best_6x6['test_wins']/best_6x6['test_total']:.1f}%)\n")
-            complexity = analyze_strategy_complexity(best_6x6['strategy'])
-            f.write(f"  Complexity: {complexity['total_operations']} operations, {complexity['unique_features']} unique features\n")
-            f.write(f"  Features Used: {complexity['features_used']}\n")
-        
-        if best_8x8:
-            f.write(f"\nBest 8x8 Strategy:\n")
-            f.write(f"  File: {best_8x8['file']}\n")
-            f.write(f"  Strategy: {best_8x8['strategy']}\n")
-            f.write(f"  Training Fitness: {best_8x8['fitness']:.4f} ({100*(1-best_8x8['fitness']):.1f}% win rate)\n")
-            f.write(f"  Test Performance: {best_8x8['test_wins']}/{best_8x8['test_total']} ({100*best_8x8['test_wins']/best_8x8['test_total']:.1f}%)\n")
-            complexity = analyze_strategy_complexity(best_8x8['strategy'])
-            f.write(f"  Complexity: {complexity['total_operations']} operations, {complexity['unique_features']} unique features\n")
-            f.write(f"  Features Used: {complexity['features_used']}\n")
-        
-        # Strategy comparison
-        f.write("\n\n" + "=" * 80 + "\n")
-        f.write("STRATEGY COMPARISON\n")
-        f.write("=" * 80 + "\n\n")
-        
-        for result in results:
-            if result['strategy']:
-                f.write(f"{result['board_size']}x{result['board_size']} - {result['file']}\n")
-                f.write(f"  Strategy: {result['strategy']}\n")
-                complexity = analyze_strategy_complexity(result['strategy'])
-                f.write(f"  Operations: {complexity['total_operations']}\n")
-                f.write(f"  Unique Features: {complexity['unique_features']}\n")
-                f.write(f"  Token Breakdown: {complexity['token_counts']}\n")
-                if result['test_wins'] is not None:
-                    f.write(f"  Test: {result['test_wins']}/{result['test_total']} ({100*result['test_wins']/result['test_total']:.1f}%)\n")
-                f.write("\n")
-    
-    print(f"Saved analysis report to {report_path}")
+def parse_generation_stats(result_path: Path) -> tuple[list[int], list[float], list[float]]:
+    """Return (generations, best_fitness, avg_fitness) from an evolution result .txt file."""
+    text = result_path.read_text(encoding="utf-8", errors="replace")
+    gens: list[int] = []
+    best: list[float] = []
+    avg: list[float] = []
+    for line in text.splitlines():
+        if line.startswith("Generation ") and "Best=" in line:
+            m = re.search(r"Generation (\d+): Best=([\d.]+), Avg=([\d.]+)", line)
+            if m:
+                gens.append(int(m.group(1)))
+                best.append(float(m.group(2)))
+                avg.append(float(m.group(3)))
+    return gens, best, avg
 
 
-def main():
-    """Main analysis function."""
-    results_dir = Path('results')
-    
-    # Find all evolution result files
-    result_files = list(results_dir.glob('evolution_*.txt'))
-    
-    if not result_files:
-        print("No evolution result files found in results/ directory")
-        return
-    
-    print(f"Found {len(result_files)} result files")
-    
-    # Parse all results
-    results = []
-    for filepath in result_files:
-        try:
-            result = parse_result_file(filepath)
-            results.append(result)
-            print(f"Parsed: {result['file']}")
-        except Exception as e:
-            print(f"Error parsing {filepath}: {e}")
-    
-    if not results:
-        print("No valid results to analyze")
-        return
-    
-    # Create analysis directory
-    analysis_dir = 'results/analysis'
-    os.makedirs(analysis_dir, exist_ok=True)
-    
-    # Generate visualizations
-    print("\nGenerating visualizations...")
-    plot_evolution_progress(results, analysis_dir)
-    
-    # Generate report
-    print("\nGenerating report...")
-    generate_report(results, analysis_dir)
-    
-    print("\n" + "=" * 80)
-    print("Analysis complete! Check results/analysis/ for:")
-    print("  - 1_best_fitness.png (best fitness over generations)")
-    print("  - 2_avg_fitness.png (average fitness over generations)")
-    print("  - 3_test_performance.png (test performance comparison)")
-    print("  - 4_training_vs_test.png (training vs test comparison)")
-    print("  - analysis_report.txt (detailed text report)")
-    print("=" * 80)
+def plot_figure2_train_vs_test(rows: list[dict[str, str]], source_name: str, out_path: Path) -> None:
+    train_x: list[float] = []
+    test_y: list[float] = []
+    colors: list[str] = []
+    for row in rows:
+        if _is_minimax_row(row):
+            continue
+        tr = _float(row, "Train Win Rate")
+        te = _float(row, "Test Win Rate")
+        if np.isnan(tr) or np.isnan(te):
+            continue
+        train_x.append(tr * 100.0)
+        test_y.append(te * 100.0)
+        bs = row.get("Board Size", "")
+        colors.append("#3498db" if bs == "6x6" else "#27ae60")
+
+    fig, ax = plt.subplots(figsize=(8, 8))
+    ax.scatter(train_x, test_y, c=colors, edgecolors="black", linewidths=0.4, s=45, zorder=3)
+    lo, hi = 0.0, 100.0
+    (diag,) = ax.plot([lo, hi], [lo, hi], "k--", linewidth=1, alpha=0.5, label="y = x (no gap)")
+    ax.set_xlabel("Training win rate (%)")
+    ax.set_ylabel("Standardised test win rate (%)")
+    ax.set_title("Training vs standardised test performance\n" + source_name, fontsize=11)
+    ax.set_xlim(lo, hi)
+    ax.set_ylim(lo, hi)
+    ax.grid(True, alpha=0.3)
+    ax.legend(
+        handles=[
+            diag,
+            Patch(facecolor="#3498db", edgecolor="black", label="6×6"),
+            Patch(facecolor="#27ae60", edgecolor="black", label="8×8"),
+        ],
+        loc="lower right",
+        fontsize=9,
+    )
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=200, bbox_inches="tight")
+    plt.close(fig)
 
 
-if __name__ == '__main__':
+def plot_figure3_conditions(rows: list[dict[str, str]], source_name: str, out_path: Path) -> None:
+    """Box + jittered points: standardised test win rate (%) per mapped 8×8 run, by condition."""
+    by_cond: dict[str, list[float]] = {c: [] for c in CONDITION_ORDER_FIG3}
+    for row in rows:
+        if _is_minimax_row(row):
+            continue
+        if row.get("Board Size") != "8x8":
+            continue
+        fn = row.get("Result File", "")
+        label = CONDITION_BY_FILE.get(fn)
+        if label is None or label == "Config_5":
+            continue
+        if label not in by_cond:
+            continue
+        te = _float(row, "Test Win Rate")
+        if not np.isnan(te):
+            by_cond[label].append(te * 100.0)
+
+    data = [by_cond[c] for c in CONDITION_ORDER_FIG3 if by_cond[c]]
+    labels = [c for c in CONDITION_ORDER_FIG3 if by_cond[c]]
+    if not data:
+        raise SystemExit("No 8×8 rows matched CONDITION_BY_FILE; check CSV filenames.")
+
+    fig, ax = plt.subplots(figsize=(11, 6.8))
+    positions = np.arange(1, len(labels) + 1)
+    bp = ax.boxplot(
+        data,
+        positions=positions,
+        widths=0.55,
+        patch_artist=True,
+        showmeans=True,
+        meanprops=dict(marker="D", markerfacecolor="white", markeredgecolor="black", markersize=6),
+        medianprops=dict(color="#2ca02c", linewidth=2.2),
+        whiskerprops=dict(color="black", linewidth=1.25, linestyle="-"),
+        capprops=dict(color="black", linewidth=1.25),
+    )
+    for patch in bp["boxes"]:
+        patch.set_facecolor("#aed6f1")
+        patch.set_alpha(0.85)
+    rng = np.random.default_rng(42)
+    for i, vals in enumerate(data):
+        x = rng.uniform(positions[i] - 0.12, positions[i] + 0.12, size=len(vals))
+        ax.scatter(x, vals, color="#1b4f72", s=28, alpha=0.9, zorder=3, edgecolors="white", linewidths=0.4)
+    ax.set_xticks(positions)
+    ax.set_xticklabels(labels, rotation=22, ha="right", fontsize=9)
+    ax.set_ylabel("Standardised test win rate (%)")
+    ax.set_title("8×8: standardised test performance by condition\n" + source_name, fontsize=11)
+    ax.axhline(50.0, color="gray", linestyle="--", linewidth=1, alpha=0.7, label="50% (random baseline)")
+    ax.grid(True, axis="y", alpha=0.3)
+    ax.set_ylim(0, 105)
+
+    legend_elems = [
+        Patch(
+            facecolor="#aed6f1",
+            edgecolor="#2e86ab",
+            linewidth=1,
+            label="Shaded box: Q1–Q3 (middle 50% of runs in the group)",
+        ),
+        Line2D(
+            [0, 1],
+            [0, 0],
+            color="#2ca02c",
+            linewidth=2.5,
+            solid_capstyle="butt",
+            label="Horizontal line inside box: median test win rate",
+        ),
+        Line2D(
+            [0.5, 0.5],
+            [0, 1],
+            color="black",
+            linewidth=1.25,
+            label="Vertical black lines: whiskers (extend to min / max run)",
+        ),
+        Line2D(
+            [0.35, 0.65],
+            [1, 1],
+            color="black",
+            linewidth=1.25,
+            label="Short horizontal caps: ends of each whisker",
+        ),
+        Line2D(
+            [0],
+            [0],
+            marker="o",
+            color="w",
+            markerfacecolor="#1b4f72",
+            markeredgecolor="white",
+            markersize=9,
+            label="Point: one run (that strategy’s standardised test win rate)",
+        ),
+        Line2D(
+            [0],
+            [0],
+            marker="D",
+            color="w",
+            markerfacecolor="white",
+            markeredgecolor="black",
+            markersize=7,
+            label="Diamond: mean win rate across runs in the group",
+        ),
+        Line2D([0], [0], color="gray", linestyle="--", linewidth=1, alpha=0.7, label="Grey dashed: 50% vs random"),
+    ]
+    ax.legend(
+        handles=legend_elems,
+        loc="lower left",
+        fontsize=7.5,
+        framealpha=0.97,
+        title="How to read this plot",
+    )
+
+    fig.subplots_adjust(left=0.09, right=0.98, top=0.90, bottom=0.30)
+    fig.text(
+        0.5,
+        0.08,
+        "Each column is one experimental condition (Chapter 5). "
+        "Standardised test: 5 seeds × 30 games vs random (reevaluate_strategies_match_evolution.py).",
+        ha="center",
+        fontsize=8,
+        style="italic",
+        color="#333333",
+    )
+    fig.savefig(out_path, dpi=200, bbox_inches="tight", pad_inches=0.35)
+    plt.close(fig)
+
+
+def discover_evolution_8x8_files() -> list[Path]:
+    """8×8 evolution result files only (excludes minimax)."""
+    files = sorted(RESULTS_DIR.glob("evolution_8x8_*.txt"))
+    return [p for p in files if "minimax" not in p.name.lower()]
+
+
+def plot_figure4_fitness_curves(paths: list[Path], out_path: Path) -> None:
+    """One line per run: best fitness vs generation (lower is better)."""
+    if not paths:
+        raise SystemExit("No evolution result files found for figure 4.")
+
+    series: list[tuple[Path, list[int], list[float]]] = []
+    for path in paths:
+        gens, best, _avg = parse_generation_stats(path)
+        if not gens:
+            print(f"Warning: no generation stats in {path.name}, skipping")
+            continue
+        series.append((path, gens, best))
+
+    if not series:
+        raise SystemExit("No files contained Generation statistics lines.")
+
+    try:
+        cmap = plt.cm.turbo
+    except AttributeError:
+        cmap = plt.cm.viridis
+    n = len(series)
+    fig, ax = plt.subplots(figsize=(12, 7))
+    for i, (_path, gens, best) in enumerate(series):
+        color = cmap(0.08 + 0.84 * (i / max(n - 1, 1)))
+        ax.plot(gens, best, color=color, linewidth=1.05, alpha=0.88)
+
+    ax.set_xlabel("Generation")
+    ax.set_ylabel("Best fitness in population (lower is better)")
+    ax.invert_yaxis()
+    ax.set_title(f"8×8: best fitness over generations ({n} runs, alphabetical order)")
+    ax.grid(True, alpha=0.35)
+
+    fig.subplots_adjust(bottom=0.14)
+    fig.text(
+        0.5,
+        0.02,
+        "Each line: one 8×8 run’s best fitness during training (lower is better).",
+        ha="center",
+        fontsize=8,
+        style="italic",
+        color="#333333",
+    )
+    fig.savefig(out_path, dpi=200, bbox_inches="tight", pad_inches=0.25)
+    plt.close(fig)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Generate EvoDraughts figures 2–4 for the thesis report.")
+    parser.add_argument(
+        "--csv",
+        type=Path,
+        default=None,
+        help="standardized_test_results_evolution_match_*.csv (default: latest in results/)",
+    )
+    parser.add_argument(
+        "--figure4-files",
+        nargs="*",
+        default=None,
+        help="Optional: specific evolution_*.txt basenames under results/. "
+        "Default: all non-minimax evolution_*.txt with generation stats.",
+    )
+    args = parser.parse_args()
+
+    csv_path = args.csv or _find_latest_standardized_csv()
+    if csv_path is None:
+        raise SystemExit(f"No standardized_test_results_evolution_match_*.csv in {RESULTS_DIR}")
+
+    rows = _load_csv_rows(csv_path)
+    source_tag = csv_path.name
+    ANALYSIS_DIR.mkdir(parents=True, exist_ok=True)
+
+    out2 = ANALYSIS_DIR / "figure_2_train_vs_test_scatter.png"
+    out3 = ANALYSIS_DIR / "figure_3_8x8_test_win_rate_by_condition.png"
+    out4 = ANALYSIS_DIR / "figure_4_fitness_over_generations.png"
+
+    plot_figure2_train_vs_test(rows, source_tag, out2)
+    print(out2)
+
+    plot_figure3_conditions(rows, source_tag, out3)
+    print(out3)
+
+    if args.figure4_files:
+        f4_paths = [RESULTS_DIR / name for name in args.figure4_files]
+    else:
+        f4_paths = discover_evolution_8x8_files()
+    plot_figure4_fitness_curves(f4_paths, out4)
+    print(out4)
+
+
+if __name__ == "__main__":
     main()
-
