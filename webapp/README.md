@@ -19,4 +19,3 @@ Then open http://localhost:5000 in your browser.
 - You play as red, the evolved strategy plays as black
 - Click your pieces and then click where to move them
 
-That's basically it. Games aren't being recorded right now - it's just for testing how the strategies perform against humans next semester
