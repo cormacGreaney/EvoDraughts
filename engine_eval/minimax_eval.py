@@ -1,17 +1,41 @@
+"""
+Head-to-head evaluation: evolved 8x8 strategies vs the minimax engine.
+
+Strategies are executed with the same position-evaluation move selection as
+``evolve_draughts_8x8`` (and ``reevaluate_strategies_match_evolution``), not the
+legacy direct move-index interpretation in ``play_against_evolved``.
+"""
+
 import argparse
+import csv
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Sequence, Tuple
+
+# Default batch for the report: fixed set of 8x8 strategies (under results/).
+REPORT_MINIMAX_STRATEGIES: Tuple[str, ...] = (
+    "evolution_8x8_20260316_010459.txt",
+    "evolution_8x8_20260219_203646.txt",
+    "evolution_8x8_20251218_002100.txt",
+    "evolution_8x8_20260312_214315.txt",
+    "evolution_8x8_20260227_011809.txt",
+)
+
+# Project root must be on path before engine_eval / draughts imports when run as a script.
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
 
 from engine_eval.minimax_engine.board import Board
 from engine_eval.minimax_engine.constants import RED, WHITE
 from engine_eval.minimax_engine.piece import Piece
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from draughts_game import DraughtsBoard
-from play_against_evolved import load_strategy_from_file, strategy_from_phenotype
+from play_against_evolved import load_strategy_from_file
+
+import evolve_draughts_8x8
 
 
 def _build_draughts_board_from_minimax(board: Board, strategy_is_white: bool) -> DraughtsBoard:
@@ -191,7 +215,7 @@ def evaluate_strategy_against_minimax(results_file: str, games: int, depth: int 
     if board_size != 8:
         raise ValueError("Expected an 8x8 strategy results file.")
 
-    strategy = strategy_from_phenotype(phenotype, board_size)
+    strategy = evolve_draughts_8x8.strategy_from_phenotype(phenotype)
 
     wins = 0
     draws = 0
@@ -210,9 +234,79 @@ def evaluate_strategy_against_minimax(results_file: str, games: int, depth: int 
     return wins, draws, losses
 
 
+def _write_minimax_report_files(
+    output_dir: Path,
+    stamp: str,
+    rows: Sequence[Tuple[str, int, int, int]],
+    games: int,
+    depth: int,
+) -> Tuple[Path, Path]:
+    """
+    Write human-readable summary and CSV. rows: (filename, wins, draws, losses).
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    txt_path = output_dir / f"minimax_eval_{stamp}.txt"
+    csv_path = output_dir / f"minimax_eval_{stamp}.csv"
+
+    lines: List[str] = [
+        "EvoDraughts — Minimax head-to-head evaluation",
+        "=" * 60,
+        f"Generated: {datetime.now().isoformat(timespec='seconds')}",
+        f"Games per strategy: {games}",
+        f"Minimax search depth: {depth}",
+        "Strategy execution: evolve_draughts_8x8 (position evaluation per legal move)",
+        "",
+        "Note on outcomes:",
+        "  Play is deterministic: same opening and fixed-depth minimax each time.",
+        "  Alternating colours splits games into two identical halves (as White vs as Red);",
+        "  each half repeats the same trajectory, so aggregate W/D/L counts take at most",
+        "  two outcome types. Running many games per strategy is for verification and",
+        "  reporting, not independent random samples.",
+        "",
+        "Results",
+        "-" * 60,
+        f"{'Strategy file':<48} {'W':>5} {'D':>5} {'L':>5}  Win rate",
+        "-" * 60,
+    ]
+
+    csv_rows: List[dict] = []
+    for name, w, d, l in rows:
+        total = w + d + l
+        rate = (w / total) if total else 0.0
+        lines.append(f"{name:<48} {w:5d} {d:5d} {l:5d}  {rate:.1%}")
+        csv_rows.append(
+            {
+                "strategy_file": name,
+                "wins": w,
+                "draws": d,
+                "losses": l,
+                "games": total,
+                "win_rate": round(rate, 6),
+            }
+        )
+
+    lines.append("")
+    txt_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    with csv_path.open("w", newline="", encoding="utf-8") as f:
+        wcsv = csv.DictWriter(
+            f,
+            fieldnames=["strategy_file", "wins", "draws", "losses", "games", "win_rate"],
+        )
+        wcsv.writeheader()
+        wcsv.writerows(csv_rows)
+
+    return txt_path, csv_path
+
+
 def main() -> None:
+    project_root = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
     parser = argparse.ArgumentParser(
-        description="Evaluate all 8x8 evolved strategies against a minimax-based engine."
+        description=(
+            "Evaluate 8x8 evolved strategies against the minimax engine, using the same "
+            "position-evaluation strategy semantics as evolve_draughts_8x8."
+        )
     )
     parser.add_argument(
         "--games",
@@ -226,24 +320,90 @@ def main() -> None:
         default=2,
         help="Minimax search depth for the engine.",
     )
+    parser.add_argument(
+        "--all-8x8",
+        action="store_true",
+        help=(
+            "Evaluate every results/evolution_8x8_*.txt instead of the default "
+            "report shortlist."
+        ),
+    )
+    parser.add_argument(
+        "--include-minimax-trained",
+        action="store_true",
+        help=(
+            "With --all-8x8: also include engine_eval/minimax_results/evolution_minimax_8x8_*.txt."
+        ),
+    )
+    parser.add_argument(
+        "--results-file",
+        type=str,
+        default=None,
+        help="Evaluate a single result file path instead of the default batch.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=None,
+        help="Directory for minimax_eval_<timestamp>.txt and .csv (default: project results/).",
+    )
+    parser.add_argument(
+        "--no-save",
+        action="store_true",
+        help="Print to stdout only; do not write report files.",
+    )
 
     args = parser.parse_args()
 
-    project_root = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     results_dir = project_root / "results"
+    if args.output_dir:
+        out_dir = Path(args.output_dir)
+    else:
+        out_dir = results_dir
 
-    if not results_dir.exists():
-        print(f"No results directory found at {results_dir}")
-        return
+    if args.results_file:
+        files = [Path(args.results_file)]
+        for p in files:
+            if not p.is_file():
+                print(f"File not found: {p}")
+                return
+    else:
+        if not results_dir.exists():
+            print(f"No results directory found at {results_dir}")
+            return
 
-    files = sorted(results_dir.glob("evolution_8x8_*.txt"))
-    if not files:
-        print("No 8x8 evolution result files found.")
-        return
+        if args.all_8x8:
+            files = sorted(results_dir.glob("evolution_8x8_*.txt"))
+            if args.include_minimax_trained:
+                mm_dir = project_root / "engine_eval" / "minimax_results"
+                if mm_dir.is_dir():
+                    files.extend(sorted(mm_dir.glob("evolution_minimax_8x8_*.txt")))
+                files = sorted(set(files), key=lambda p: p.name)
+        else:
+            files = []
+            missing: List[str] = []
+            for fname in REPORT_MINIMAX_STRATEGIES:
+                p = results_dir / fname
+                if p.is_file():
+                    files.append(p)
+                else:
+                    missing.append(fname)
+            if missing:
+                print("Missing curated strategy file(s) under results/:")
+                for m in missing:
+                    print(f"  {m}")
+                return
 
-    print(f"Evaluating {len(files)} strategies against minimax-based engine.")
+        if not files:
+            print("No matching 8x8 evolution result files found.")
+            return
+
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    print(f"Evaluating {len(files)} strategies against minimax-based engine (depth={args.depth}).")
     print()
 
+    rows: List[Tuple[str, int, int, int]] = []
     for path in files:
         wins, draws, losses = evaluate_strategy_against_minimax(
             str(path),
@@ -251,7 +411,20 @@ def main() -> None:
             depth=args.depth,
         )
         name = path.name
+        rows.append((name, wins, draws, losses))
         print(f"{name}: W={wins}, D={draws}, L={losses}")
+
+    if not args.no_save:
+        txt_path, csv_path = _write_minimax_report_files(
+            out_dir,
+            stamp,
+            rows,
+            games=args.games,
+            depth=args.depth,
+        )
+        print()
+        print(f"Wrote {txt_path}")
+        print(f"Wrote {csv_path}")
 
 
 if __name__ == "__main__":

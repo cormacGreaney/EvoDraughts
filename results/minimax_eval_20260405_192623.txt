@@ -1,0 +1,24 @@
+EvoDraughts — Minimax head-to-head evaluation
+============================================================
+Generated: 2026-04-05T19:28:39
+Games per strategy: 50
+Minimax search depth: 2
+Strategy execution: evolve_draughts_8x8 (position evaluation per legal move)
+
+Note on outcomes:
+  Play is deterministic: same opening and fixed-depth minimax each time.
+  Alternating colours splits games into two identical halves (as White vs as Red);
+  each half repeats the same trajectory, so aggregate W/D/L counts take at most
+  two outcome types. Running many games per strategy is for verification and
+  reporting, not independent random samples.
+
+Results
+------------------------------------------------------------
+Strategy file                                        W     D     L  Win rate
+------------------------------------------------------------
+evolution_8x8_20260316_010459.txt                   25    25     0  50.0%
+evolution_8x8_20260219_203646.txt                    0    25    25  0.0%
+evolution_8x8_20251218_002100.txt                    0     0    50  0.0%
+evolution_8x8_20260312_214315.txt                    0     0    50  0.0%
+evolution_8x8_20260227_011809.txt                    0    25    25  0.0%
+

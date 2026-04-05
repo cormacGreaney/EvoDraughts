@@ -3,6 +3,10 @@ import os
 import sys
 from typing import List, Tuple
 
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT)
+
 from engine_eval.minimax_engine.board import Board
 from engine_eval.minimax_engine.constants import RED, WHITE, ROWS, COLS
 from engine_eval.minimax_engine.piece import Piece
@@ -12,9 +16,9 @@ from engine_eval.minimax_eval import (
     _minimax_choose_move,
 )
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from play_against_evolved import load_strategy_from_file
 
-from play_against_evolved import load_strategy_from_file, strategy_from_phenotype
+import evolve_draughts_8x8
 
 
 def _print_board(board: Board) -> None:
@@ -124,7 +128,7 @@ def main() -> None:
     if board_size != 8:
         raise ValueError("Expected an 8x8 strategy results file.")
 
-    strategy = strategy_from_phenotype(phenotype, board_size)
+    strategy = evolve_draughts_8x8.strategy_from_phenotype(phenotype)
 
     for i in range(args.games):
         as_white = (i % 2 == 0)
