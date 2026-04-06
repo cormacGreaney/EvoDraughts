@@ -2,7 +2,7 @@
 
 This document tracks the execution of planned 8x8 runs as specified in `planned_8x8_runs.md`.
 
-**Standardized test metrics:** All **Test (5 seeds × 30 games)** lines use `reevaluate_strategies_match_evolution.py` (move selection matches evolution). Values below match `results/standardized_test_results_evolution_match_20260327_024635.csv` (seeds and games per seed from `config.py`: `TEST_SEEDS_8x8`, `TEST_GAMES_PER_SEED`).
+**Standardized test metrics:** All **Test (5 seeds × 30 games)** lines use `reevaluate_strategies_match_evolution.py` (move selection matches evolution). Values below match `results/standardized_test_results_evolution_match_20260324_000035.csv` (seeds and games per seed from `config.py`: `TEST_SEEDS_8x8`, `TEST_GAMES_PER_SEED`).
 
 ## Run Status Overview
 
